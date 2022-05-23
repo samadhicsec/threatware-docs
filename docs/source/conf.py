@@ -40,4 +40,4 @@ epub_show_urls = 'footnote'
 # -- Options for MyST
 
 myst_heading_anchors = 3
-myst_enable_extensions = ["deflist"]
+myst_enable_extensions = ["deflist", "colon_fence"]

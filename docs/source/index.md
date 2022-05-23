@@ -10,6 +10,7 @@ self
    :maxdepth: 2
    :hidden:
 
+actions/authentication
 actions/parameters
 actions/convert
 actions/verify
