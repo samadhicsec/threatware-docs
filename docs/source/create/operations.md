@@ -1,1 +1,1 @@
-# Operational Security Table
+# Operational Security

@@ -6,6 +6,12 @@ threatware actualy provides 2 versions of the same threat model template:
 - Confluence
 - Google Doc
 
+:::{tip}
+The best way to learn how to populate the threat model template is to look at examples first, and read the documentation second.
+
+For an example threat model, of threatware, see this [populated template]()
+:::
+
 The following sections describe how to populate information in the above templates, regarding the context of the system being threat modelled.
 
 ## Details Table
@@ -58,10 +64,14 @@ Approver Date
 
 ## Scope Table
 
-The Scope Table gathers information related to the team that owns the threat model, and it specifically captures external references (e.g. source code repositories) that identify the components that are in-scope for this threat model.
+The Scope Table gathers identifiers related to the system being threat modelled.  By gathering this information in threat models, it should enable threat models to be discovered if only an identifier for a system is known e.g. a service name, a repo, a team etc. 
+
+```{note}
+The Scope Table should be one of the first tables to consider customising to your businesses needs, as each business will have their own way of identifing systems (e.g. service, name, service IDs, service accounts, OAuth2 Client IDs, etc.), and you may have your own preferences on what information you want to be able to search for, or group, threat models by (e.g. cloud account name/ID, datacentre, region, highest data sensitivity processed, etc.).  
+```
 
 Org
-:  The organisation that the Team belongs to.  Different companies use different terminology e.g. Business Unit, Tribe, etc.
+:  The organisation that the Team belongs to.  Different businesses use different terminology e.g. Business Unit, Tribe, etc.
 
 Team
 :  The name of the team that owns the in-scope components of the system being threat modelled.
@@ -71,7 +81,7 @@ Repos
 
 3rd Parties
 :  The 3rd parties that are in-scope for this threat model.  More than 1 value can be listed, but entries shoudl be `,` or `\n` separated.  
-:  A 3rd Party is practically defined as a system not developed by the Team, but that the Team "owns" in the sense that they are responsible for it.  An example would be a SaaS service that the system being threat modelled depends on and was provisioned by the Team.  Typically this would NOT include common internal services, or common infrastructure services (whether in the cloud or on-prem) - for instance this field is not meant to capture every AWS/GCP/Azure service used by the system being threat modelled.  It would be very common for a 3rd Party to be mentioned here if the Team has some kind of operational security responsibility for it, as captured in [](./operations.md#operational-security-table).
+:  A 3rd Party is practically defined as a system not developed by the Team, but that the Team "owns" in the sense that they are responsible for it.  An example would be a SaaS service that the system being threat modelled depends on and was provisioned by the Team.  Typically this would NOT include common internal services, or common infrastructure services (whether in the cloud or on-prem) - for instance this field is not meant to capture every AWS/GCP/Azure service used by the system being threat modelled.  It would be very common for a 3rd Party to be mentioned here if the Team has some kind of operational security responsibility for it, as captured in [](./operations.md#operational-security) Table.
 
 
 ## Description

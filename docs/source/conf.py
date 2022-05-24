@@ -3,7 +3,7 @@
 # -- Project information
 
 project = 'threatware'
-copyright = '2022, dave@samadhicsecurity.com'
+copyright = '2022, samadhicsecurity.com'
 author = 'dave@samadhicsecurity.com'
 
 release = '0.1'
