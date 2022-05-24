@@ -26,6 +26,8 @@ intersphinx_mapping = {
 }
 intersphinx_disabled_domains = ['std']
 
+#master_doc = 'index.md'
+
 templates_path = ['_templates']
 
 source_suffix = ['.md']
