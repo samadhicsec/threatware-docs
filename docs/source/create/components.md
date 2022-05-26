@@ -26,7 +26,7 @@ Practically speaking, if there is any kind of design documentation for a system 
 The Components Details Table must have a row per Component (and only one Component per row), and it contains the following columns:
 
 Name
-:  A short unique name for the component.  This is the name that will be used elsewhere in the threat model, so it must be unique, and for convienence it should be short.  If the Component is something that has an identity, then using that identity is often a good idea, but it depends on how human friendly the name is.
+:  A short unique name (amongst all names in this threat model) for the component.  This is the name that will be used elsewhere in the threat model, so it must be unique, and for convienence it should be short.  If the Component is something that has an identity, then using that identity is often a good idea, but it depends on how human friendly the name is.
 
 Location Stack
 :  A comma separated list of the stack hosting the Component (the whole stack, up to the environment e.g. AWS account ID).  This is useful for understanding what Components are co-located, and which are not, and this directly informs threats related to communications (e.g. transport security, authentication, authorization, etc.).  For out-of-scope Components it's usually fine to only capture if it is Internet hosted, or shares the same location as in-scope Components.
