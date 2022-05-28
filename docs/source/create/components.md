@@ -21,6 +21,12 @@ Minimise infrastructure included as Components, especially if it makes sense for
 
 Practically speaking, if there is any kind of design documentation for a system then the various systems defined in that make an ideal starting point for a list of Components.
 
+## Components Diagram
+
+This should contain a diagram showing all, or at least the major components of the system being threat modelled.  Use an existing diagram if you have one, even if it is is not perfect or completely up to date (the [](./components.md#components-details-table)) will be the accurate record of what the system comprises of).  If you have to create a new diagram, keep it simple to begin with, just trying to capture the major components.
+
+What is important for this diagram is that it shows which components connect to which other components.  The actual data being sent is less important, so this diagram does not need to be a Data Flow Diagram (DFD).  it's purpose is to visually display connectivity.  It can be helpful to group components by where they are deployed, but this is not required.  Some teams like to colour code which components are in and out of scope.
+
 ## Components Details Table
 
 The Components Details Table must have a row per Component (and only one Component per row), and it contains the following columns:
