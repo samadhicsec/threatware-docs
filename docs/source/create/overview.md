@@ -41,7 +41,7 @@ This approach also chooses to de-emphaise or leave out certain things other well
 
 ## The Threat Modelling Process
 
-To create a new threat model the first thing to do is to make a copy of the threat model template.
+To create a new threat model the first thing to do is to make a copy of the threat model [template](./template.md).
 
 As you look at your new, empty threat model, the whole threat modelling processes seems like a daunting task, and certainly starting from an empty template is tough.  Let's walk through some steps to get started (but remember that detailed information about sections/tables/fields is available in subsequent sections of this help, so read those as you go).
 

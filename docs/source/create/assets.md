@@ -20,7 +20,7 @@ These resource assets are only relevant to some systems, and wouldn't often appe
 ## Functional and Technical Assets
 
 The threat model template has two tables used capture assets within the system being threat modelled, to separately capture Functional Assets and Technical Assets.
-- Functional Assets relate to the functionality implmented by the system being threat modelled, and are called out separately because they should capture the "end-goal" assets that an attacker is trying to compromise the security properties of.  If your business is using Data Domains to drive the design of your systems then the core data elements of that likely closely align to your Functional Assets
+- Functional Assets relate to the functionality implemented by the system being threat modelled, and are called out separately because they should capture the "end-goal" assets that an attacker is trying to compromise the security properties of.  If your business is using Data Domains to drive the design of your systems then the core data elements of that likely closely align to your Functional Assets
 - Technical Assets relate to all the assets that have security properties you want to ensure, but aren't the "end-goal" for an attacker, and compromising one of these would then be used by the attacker to compromise a Functional Asset.
 
 :::{admonition} Example
@@ -45,7 +45,7 @@ Description
 :  A brief description of the data, or set of data, and what role it plays in the system.  If the asset does represent a small set of data, it is helpful for this description to list the data in the set.
 
 Confidentiality, Integrity and Availability Impact
-:  Thew value for this column should be a sentence that captures the impact, if the Confidentiality, Integrity or Availability of the asset was compromised.  There should be seperate sentence per property and impact (i.e. you could have multiple sentences related to Confidentility).  This field has a special format, as sentences should be prepended with:
+:  The value for this column should be a sentence that captures the impact, if the Confidentiality, Integrity or Availability of the asset was compromised.  There should be seperate sentence per property and impact (i.e. you could have multiple sentences related to Confidentility).  This field has a special format, as sentences should be prepended with:
    - `Confidentiality:` or just `C:`
    - `Integrity:` or just `I:`
    - `Availability:` or just `A:`

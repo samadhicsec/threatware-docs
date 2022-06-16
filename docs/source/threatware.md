@@ -8,6 +8,24 @@ threatware is an AWS lambda function (or CLI tool) with methods to help review t
 - When capturing a threat model in a document, threatware can help answer the question ['Did we do a good job?'](https://github.com/adamshostack/4QuestionFrame), because it can verify the referential integrity of the information in the document (i.e. nothing undefined is referenced) and that there are threats covering all the assets.  This gives some assurance that your threat model is complete.  In contrast, many threat modelling tools take input and generate threats, but are unable to provide any assurance.
 - threatware provides a management framework to track, approve and iterate a threat model document.  There is no lock-in, all information is stored in a git repo.  The information it captures could be used for a variety of data-driven purposes e.g. inventory, coverage, metrics, etc.
 
+# Installation
+
+threatware requires a recent version of `python` (3.9 or above, and you should have `pip` installed as well ([instructions](https://pip.pypa.io/en/stable/installation/))) and that a recent version of `git` is installed ([instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)).  You may also want to consider installing threatware in a [virtual environment](https://packaging.python.org/en/latest/tutorials/installing-packages/#creating-and-using-virtual-environments)
+
+`python3 -m pip install threatware`
+
+# Download
+
+threatware is available on PyPI <https://pypi.org/project/threatware/>
+
+The documentation is hosted at: <https://threatware.readthedocs.io>
+
+# Code
+
+The code and issue tracker are hosted on GitHub: <https://github.com/samadhicsec/threatware>
+
+# Details
+
 ## Who is this for?
 
 It's for people/teams who do threat modelling or want to do threat modelling.
@@ -40,28 +58,30 @@ threatware has different features to suit those who are beginning to threat mode
 Of course that is up to you, but here is an idea of how it has been successfully used (assuming you have installed threatware and configured it):
 
 1. Make a copy of the threat model template available somewhere in your orgnisation i.e. copy the default template somewhere local to your organisation
-2. When you need to create a threat model, make a copy of the threat model template.  This will be the document you edit.
-3. Identify the people who need to populate the template (i.e. system owners/experts) and point them at the documentation and how to invoke threatware 'verify'
-4. Have sessions to begin populating the threat model.  Use threatware 'verify' to make sure no information is missing (look for 'reference-validation' errors first).  You'll like need 3-5 sessions, including off-line time spent populating.
-5. Use threatware 'verify' to make sure your have threats covering all your assets (look for 'coverage-validation' errors)
-6. Once threatware 'verify' returns no errors, sense check the threat model for completness
+2. When you need to create a threat model, make a copy of your local threat model template.  This will be the document you edit.
+3. Identify the people who need to populate the template (i.e. system owners/experts) and point them at the documentation and how to invoke threatware `verify`
+4. Have sessions to begin populating the threat model.  Use threatware `verify` to make sure no information is missing (look for `reference-validation` errors first).  You'll like need 3-5 sessions, including off-line time spent populating.
+5. Use threatware `verify` to make sure your have threats covering all your assets (look for `coverage-validation` errors)
+6. Once threatware `verify` returns no errors, sense check the threat model for completness
 7. Get someone appropriate in your organisation to add their approval to the threat model
-8. Use threatware 'submit' to create a record of the approved threat model in a git repository
+8. Use threatware `submit` to create a record of the approved threat model in a git repository
 
-As 3-4 threat models are completed, the threat model template can be updated to include common components, assets and threats, which makes the next threat models easier to complete.  It's fine to add things that might not be relevant to some systems, as removing them from the copy of the threat model template is easy.
-
-## How do i install it?
-
-Detailed installation instructions TBD.
+As 3-4 threat models are completed, your local threat model template can be updated to include common components, assets and threats, which makes the next threat models easier to complete.  It's fine to add things that might not be relevant to some systems, as removing them from the copy of your threat model template is easy.
 
 ### AWS lambda
 
-Put Confluence/Google credentials, and git credentials into AWS Secret Store.  Change 'mange/manage_config.yaml' to point to your chosen git repo.
+See [](./configure/authentication.md) for full details on how to configure authentication.
+
+Put Confluence/Google credentials, and git credentials into AWS Secret Store.  Change `manage/manage_config.yaml` to point to your chosen git repo.
 
 Clone this repo and build the dockerfile. Upload docker image to ACS.  Create AWS lambda using docker image.  Adjust timeout on lambda to 1 minute.  Trigger lambda via API Gateway (please restict access to your lambda to at least your organisation's IP range).
 
 ### CLI
 
-Put Confluence credentials in ~/.atlassian.  Google Doc credentials will be automatically capture on first attempt to access a Google Doc. threatware will use your existing git credentials SSH keys.  Change 'manage/manage_config.yaml' to point to your chosen git repo.
+See [](./configure/authentication.md) for full details on how to configure authentication.
 
-Run 'python3 -m actions.handler -h' to see command line options.
+Run `threatware convert -s abc -d 123`, this will fail, but the configuration will be downloaded.
+
+Put Confluence credentials in ~/.threatware/.atlassian.  Google Doc credentials will be automatically capture on first attempt to access a Google Doc (requires creating Google App credentials first). threatware will use your existing git credentials SSH keys.  Change `manage/manage_config.yaml` to point to your chosen git repo.
+
+Run `threatware -h` to see command line options.

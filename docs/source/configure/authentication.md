@@ -11,11 +11,15 @@ In order for the management functionality of threatware to store and retrieve th
 
 Configuring authentication differs by whether you are using threatware CLI or as a lambda.
 
+:::{admonition} Note
+All the relative paths mentioned below are relative the threatware configuration directory, as detailed in [](../configure/configuration.md)
+:::
+
 ## Authentication for threatware CLI
 
 ### Confluence
 
-By default the credentials used to authenticate to Confluence should be stored in a `~/.atlassian` file.  This is configurable in `providers/providers_config.yaml` via `providers:cli:confluence_creds_file` key.
+By default the credentials used to authenticate to Confluence should be stored in a `.atlassian` file.  This is configurable in `providers/providers_config.yaml` via `providers:cli:confluence_creds_file` key.
 
 For Confluence the URL of the Confluence server is not stored in threatware configuration files, but rather with the credentials used to authenticate to Confluence.
 
