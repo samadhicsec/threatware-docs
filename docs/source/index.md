@@ -24,6 +24,7 @@ actions/measure
 
 configure/configuration
 configure/authentication
+configure/logging
 
 ```
 
