@@ -12,7 +12,7 @@ In order for the management functionality of threatware to store and retrieve th
 Configuring authentication differs by whether you are using threatware CLI or as a lambda.
 
 :::{admonition} Note
-All the relative paths mentioned below are relative the threatware configuration directory, as detailed in [](../configure/configuration.md)
+All the relative paths mentioned below are relative the threatware configuration directory, as detailed in [](./configuration.md)
 :::
 
 ## Authentication for threatware CLI
