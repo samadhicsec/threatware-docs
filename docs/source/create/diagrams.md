@@ -18,7 +18,7 @@ The template has explicit sections for adding sequence and data-flow diagrams, b
 
 ## Sequence Diagrams
 
-Sequence diagrams are useful when the system has a complicated flow of assets that occur in a particular order and generally involve several different components.  As a rule of thumb, prefeence should be given to producing sequence diagrams over other types of diagrams.
+Sequence diagrams are useful when the system has a complicated flow of assets that occur in a particular order and generally involve several different components.  As a rule of thumb, preference should be given to producing sequence diagrams over other types of diagrams.
 
 ## Data Flow Diagrams
 

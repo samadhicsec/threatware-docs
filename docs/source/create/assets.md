@@ -5,10 +5,10 @@ In threat modelling when we talk about assets we are talking about 'things of va
 ## What is an asset?
 The vast majority of assets that we capture in a threat model are data assets, pieces of data that have value, which could be:
 - Personal Data, like names, addresses etc.
-- Functional Data, which will be specific to the business purpose of the system being threat modelled, but could be; user's documents, product confgiurations, product prices, user history etc.
+- Functional Data, which will be specific to the business purpose of the system being threat modelled, but could be; user's documents, product configurations, product prices, user history etc.
 - Business Data, which could be; financial, legal, commercial, marketing, HR etc.
 
-Data assets, when captured (in the tables described below), do not need to be individual pieces of data, but can also be a name given to a set of data (e.g. a row of data in a database).  The key thing to understand is that any data grouped should share the same required secuirty properties and the same storage location.  Individual pieces of data can of course be called out separately, and that would be appropriate for particularly sensitive pieces of data, or data that your business otherwise commonly tracks.
+When populating (in the tables described below) data assets, they do not need to be populated as individual pieces of data, but can be a group of data (e.g. a row of data in a database, as `Profile` data instead of listing `name`, `address` etc., as `event data` instead of listing each field in an event).  The key thing to understand is that any data grouped should share the same required security properties and the same storage location.  Individual pieces of data can of course be called out separately, and that would be appropriate for particularly sensitive pieces of data, or data that your business otherwise commonly tracks.
 
 We can also capture resource assets, which are consumable resources that have value (i.e. we want to ensure their confidentiality, integrity and availability), which could be:
 - Compute resources, like; VMs, lambdas, OS, etc. - anything where an attacker might be able to run arbitrary code.
@@ -19,16 +19,16 @@ These resource assets are only relevant to some systems, and wouldn't often appe
 
 ## Functional and Technical Assets
 
-The threat model template has two tables used capture assets within the system being threat modelled, to separately capture Functional Assets and Technical Assets.
-- Functional Assets relate to the functionality implemented by the system being threat modelled, and are called out separately because they should capture the "end-goal" assets that an attacker is trying to compromise the security properties of.  If your business is using Data Domains to drive the design of your systems then the core data elements of that likely closely align to your Functional Assets
+The threat model template has two tables used to capture assets within the system being threat modelled, to separately capture Functional Assets and Technical Assets.
+- Functional Assets relate to the functionality implemented by the system being threat modelled, and are called out separately because they should represent the "end-goal" assets that an attacker is trying to compromise the security properties of.  If your business is using Domain Driven Design (DDD) to drive the design of your systems then the core data elements of that likely closely align to your Functional Assets
 - Technical Assets relate to all the assets that have security properties you want to ensure, but aren't the "end-goal" for an attacker, and compromising one of these would then be used by the attacker to compromise a Functional Asset.
 
 :::{admonition} Example
-Imagine you have user data encrypted in a database.  This implies you have an encryption key used for the encryption.  That encryption key is an important asset from a security point of view and you want to ensure its confidentiality, because if it was disclosed to an attacker, they would have the means to decrypt user data in the database.  However, that encryption should be considered a Technical Asset, because the "end-goal" of an attacker is not to find an encryption key (which by-itself has no value), their "end-goal" is to find an encryption and then use it to get to user data.  The user data is the "end-goal", and so would be a Functional Asset.
+Imagine you have user data encrypted in a database.  This implies you have an encryption key used for the encryption.  That encryption key is an important asset from a security point of view and you want to ensure its confidentiality, because if it was disclosed to an attacker, they would have the means to decrypt user data in the database.  However, that encryption key should be considered a Technical Asset, because the "end-goal" of an attacker is not to find an encryption key (which by-itself has no value), their "end-goal" is to find an encryption key and then use it to decrypt encrypted user data.  The user data is the "end-goal", and so would be a Functional Asset.
 :::
 
 :::{note}
-The term "end-goal" should be understood to mean the "end-goal within the scope of the system being threat modelled", so even if the ultimate end-goal of an attacker lay within an out-of-scope system, their "end-goal" with respect to the system being threat modelled can still be captured.
+The term "end-goal" should be understood to mean the "end-goal within the scope of the system being threat modelled", so even if the ultimate end-goal of an attacker lay within an out-of-scope system, their "end-goal" with respect to the system being threat modelled should be used when identifying Functional Assets.
 :::
 
 ## Functional Assets Table
@@ -49,13 +49,29 @@ Confidentiality, Integrity and Availability Impact
    - `Confidentiality:` or just `C:`
    - `Integrity:` or just `I:`
    - `Availability:` or just `A:`
+   
    Here some example starts to the sentences you might want to use:
    - `C: An attacker that can read this asset could ...`
    - `I: An attacker that can write this asset could ...`
-   The end of the sentence should just state a "bad thing" that could happen.  For instance if the asset was a secret key used to encrypt data in a a database, the sentence could be `C: An attacker that can read this asset could decrypt data in the database`.  **At this stage we are totally ignoring the likelihood of the "bad thing" happen, we are totally ignoring any mitigating controls that might exist** (this will be captured in the [](./threats-controls.md#threats-and-controls-table)), we are only concerned with capturing impact.
-     
+   
+   The end of the sentence should just state a "bad thing" that could happen.  For instance if the asset was a secret key used to encrypt data in a database, the sentence could be `C: An attacker that can read this asset could decrypt data in the database`.  
+   
+   **At this stage we are totally ignoring the likelihood of the "bad thing" happen, we are totally ignoring any mitigating controls that might exist** (this will be captured in the [](./threats-controls.md#threats-and-controls-table)), we are only concerned with capturing impact.
+
+   :::{admonition} Explanation
+   *Why would I include impacts for assets that I know I have already mitigated that impact by controls I have in place?*
+   
+   Threats exist regardless of how many mitigating controls are in place.  The purpose here is to **acknowledge and convey** that the threat exists, regardless of the **current** risk (i.e. taking existing controls into account).  You can then explain in the [](./threats-controls.md#threats-and-controls-table) what the threat is and what existing controls are in place.  This means the threat model can be **explicit about why** the potential impact to this asset from the threat, has a mitigated risk.
+
+   Consider the alternative: not listing the asset (because there are no possible ways for the assets confidentiality/integrity to be impacted due to existing controls), which also means not listing the controls.  Anyone trying to evaluate the security of your system via the threat model will not know about the asset or controls, so cannot evaluate for themselves if they agree that the risk is mitigated.  This would fail the goal of giving assurance about the security of the system since the author has evaluated and accepted (residual) risk without review.  This also misses the *opportunity* to promote the security of the system by listing existing security controls - listing security controls is important because it gives confidence to any reviewer that the system owners both understand and care about security.
+   ::: 
+
    :::{admonition} Tip
-   Novice threat modelling authors may be confused or unclear about what Confidentiality or Integrity mean, so it's often better to simplify this for them by saying "*Confidentiality means you are concerned about an attacker being able  to read the asset*", and "*Integrity means you are concerned about an attacker being about to write or change the asset*"
+   Novice threat modelling authors may be confused or unclear about what Confidentiality or Integrity mean, so it's often better to simplify this for them by saying: 
+   
+   "***Confidentiality** means you are concerned about an attacker being able  to **read** the asset*", and 
+   
+   "***Integrity** means you are concerned about an attacker being about to **write** or change the asset*"
    :::  
    :::{admonition} Common mistake
    :class: warning

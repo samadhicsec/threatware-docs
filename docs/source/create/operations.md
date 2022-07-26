@@ -1,11 +1,11 @@
 # Operational Security
 
-Operational Security relates to the secuirty processes, procedures and governance activities that a team may be responsible for.  
+Operational Security relates to the security processes, procedures and governance activities that a team may be responsible for.  
 
 Quite often a team will have no operational security responsibilities, in which case the table does not need to be populated.
 
 :::{admonition}  Example
-Imagine a team in a business that is responsible for an internal service that communicates with users via email, and the service takes an email address and a message and forwards it to a 3rd party email service provider.  If that team "own" the management responsibilities of that 3rd party email service provider, such as; 
+Imagine a team that is responsible for an internal service that communicates with users via email, and the service takes an email address and a message and forwards it to a 3rd party email service provider.  If that team "own" the management responsibilities of that 3rd party email service provider, such as; 
 - owning the administrative account, 
 - provisioning and de-provisioning users (for instance members the marketing team that generate email templates using a UI provided by the 3rd party service), 
 - configuring the security options of the 3rd party email service provider, etc., 
@@ -15,8 +15,8 @@ then that team has operational security responsibilities.
 They need to define; 
 - who is allowed access and what roles will exist, 
 - who is allowed to authorise access, 
-- what access records will be kept, 
-- how long will access records be kept, etc.  
+- what access records will be kept and for how long, 
+- how often access will be reviewed, etc.  
 
 They need to define these things because if the 3rd party email service provider contains assets of value, then an attacker may look to gain access to the 3rd party email service provider through non-technical methods, such as social engineering (and the team likely has a responsibility to meet the business' security policy requirements around access control).
 :::
@@ -39,4 +39,4 @@ Questions
 :  The operational security questions a team should answer.  The question in the first row is usually to ask for a description of system the remaining operational security questions will relate to e.g. `What is the name of the system you team has operational responsibility for controlling access to?`.
 
 Answers
-:  Answer to the operational security question in the `Questions` column of that row.  If a team has no operational security responsibilities then all rows in this column should be left empty.
+:  The answer to the operational security question in the `Questions` column of that row.  If a team has no operational security responsibilities then all rows in this column should be left empty.

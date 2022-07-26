@@ -6,8 +6,8 @@ project = 'threatware'
 copyright = '2022, samadhicsecurity.com'
 author = 'dave@samadhicsecurity.com'
 
-release = '0.1'
-version = '0.1.0'
+release = '0.9'
+version = '0.9.2'
 
 # -- General configuration
 

@@ -1,6 +1,8 @@
 # Threats and Controls
 
-If you have been following [](./overview.md#the-threat-modelling-process) then ideally you have already made noted some threats and controls in the Threats and Controls Table, but otherwise you may feel like you have only have gathered a bunch of information about the system you are threat modelling; a description and use cases, references, all the in- and out-of-scope components, identities, authentication and authorisation mechanisms, the functional and technical assets, diagrams, operational security controls.  It may seem odd that only now you are getting to call out threats!  The good news is that you have already gathered the vast majority of information you need in order to populate the Threats and Controls Table, and populating the table is more about aggregating the information you have collected and presented it concisely in a single place.
+If you have been following [](./overview.md#the-threat-modelling-process) then ideally you have already noted some threats and controls in the Threats and Controls Table, but otherwise you may feel like you have only have gathered a bunch of information about the system you are threat modelling; a description and use cases, references, all the in- and out-of-scope components, identities, authentication and authorisation mechanisms, the functional and technical assets, diagrams, operational security controls.  It may seem odd that only now you are getting to call out threats!  
+
+The good news is that you have already gathered the vast majority of information you need in order to populate the Threats and Controls Table, and populating the table is more about aggregating the information you have collected and presented it concisely in a single place.
 
 ## Threats and Controls Table
 
@@ -12,7 +14,7 @@ To populate the Threats and Controls Table with the information you have so far:
 - go through the [](./assets.md#technical-assets-table) and the [](./assets.md#functional-assets-table) and capture a threat `Unauthorized access to ...` for each of the in-scope Components in the `Storage Location` column
 - go through the [](./operations.md#operational-security-table) and capture any threats for any processes that are missing or not following good security practices
 
-For each of the above also capture any existing controls.  Any controls the help mitigate threats in different rows should be repeat (cut & paste) per row.
+For each of the above also capture any existing controls.  Any controls the help mitigate threats in different rows should be repeated (cut & paste) per row.
 
 Now is a good time to go through the list of "Controls (Existing)" captured so far and to review them for any known controls that are missing.  The team has likely implemented some security controls and so we need to make sure they have all been captured (remembering that they should only be for in-scope components and relate to the specific environment in-scope as well).  Any controls that haven't been captured should first try to find a home against existing threats, but if no existing threats are suitable, then threats should be added so the control can be captured (this may lead to updating other tables).
 

@@ -13,7 +13,7 @@ For the Team that owns the threat model:
 - any system or service they got provisioned or on-boarded (e.g. a cloud database, SaaS service) should be considered a component
 - any system they own or operate (e.g. Kubernetes cluster) should be considered a component
 
-Components often correspond to deployable units' of artifacts.  The level of granularity of a sub-system that constitutes a Component should lean towards a single deployable thing e.g. a Kubernetes Pod and not the individual containers, a contrainer hosted in ECS, a combined web and application server (if co-hosted), a OS process but not its libraries etc.    
+Components often correspond to deployable units' of artifacts.  The level of granularity of a sub-system that constitutes a Component should lean towards a single deployable thing e.g. a Kubernetes Pod and not the individual containers, a container hosted in ECS, a combined web and application server (if co-hosted), a OS process but not its libraries etc.    
 
 Start at a higher level and break apart Components as required.  When populating the threat model it often becomes apparent that it would be easier to express an authentication method, or an asset storage location, or threat or control, if a specific sub-system was called out as a Component, so it's unusual to get the list of Components complete on a first draft of a threat model, and the table becomes more complete as iterative work on the threat model happens.
 
@@ -23,7 +23,7 @@ Practically speaking, if there is any kind of design documentation for a system 
 
 ## Components Diagram
 
-This should contain a diagram showing all, or at least the major components of the system being threat modelled.  Use an existing diagram if you have one, even if it is is not perfect or completely up to date (the [](./components.md#components-details-table)) will be the accurate record of what the system comprises of).  If you have to create a new diagram, keep it simple to begin with, just trying to capture the major components.
+This should contain a diagram showing all, or at least the major components of the system being threat modelled.  Use an existing diagram if you have one, even if it is is not perfect or completely up to date (the [](./components.md#components-details-table) will be the accurate record of what the system comprises of).  If you have to create a new diagram, keep it simple to begin with, just trying to capture the major components.
 
 What is important for this diagram is that it shows which components connect to which other components.  The actual data being sent is less important, so this diagram does not need to be a Data Flow Diagram (DFD).  it's purpose is to visually display connectivity.  It can be helpful to group components by where they are deployed, but this is not required.  Some teams like to colour code which components are in and out of scope.
 
@@ -42,7 +42,7 @@ Purpose
 :  A brief description of the purpose of the Component in relation to the system being threat modelled.
 :::{admonition} Common mistake
 :class: warning
-The `Purpose` given is really generic and doesn't help someone who is not familiar with the system to understand what the Component does.  For instance for a `Database` if you have a `Purpose` of `Stores data` then that doesn't help, so it would be better to say `Persistance storage for Service A that includes PII and password hashes`
+It's a common mistake to state a `Purpose` that is really generic and doesn't help someone who is not familiar with the system to understand what the Component does.  For instance for a `Database` if you have a `Purpose` of `Stores data` then that doesn't help, so it would be better to say `Persistance storage for Service A that includes PII and password hashes`
 :::
 
 In-scope
@@ -51,7 +51,7 @@ In-scope
 :  - got the component provisioned (e.g a database), or got it on-boarded (e.g. a 3rd Party service or SaaS), and so are responsible for it
 :  - they own or operate the component e.g. hosting infrastructure like Kubernetes clusters, cloud accounts, 3rd party services
 :::{tip}
-It's better to have many small threat models rather than few large threat models.  Try to keep the number of components in-scope for a threat models to < 10 (and aim for ~5).  The more in-scope components
+It's better to have many small threat models rather than a few large threat models.  Try to keep the number of components in-scope for a threat models to < 10 (and aim for ~5).  The more in-scope components the larger the threat model becomes and more time it takes to complete.
 :::
 
 Tech Stack

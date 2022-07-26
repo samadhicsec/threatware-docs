@@ -13,7 +13,7 @@ Threat Modelling is a process that helps you identify security threats to a syst
 The Threat Modelling Template and the process to populate it is the result of years of doing threat modelling and numerous refinements.  It has served as the basis for generating and updating hundreds of threat models in multiple businesses, and has held up to the scrutiny of numerous audits in some of the most demanding environments e.g. healthcare, finance, investor due diligence etc.
 
 In order to be successful it has had to be opinionated:
-- It focuses of architecture and design issues, but accomodates classes of specific vulnerabilities when relevant to the system being threat modelled.
+- It focuses on architecture and design issues, but accomodates classes of specific vulnerabilities when relevant to the system being threat modelled.
 - It takes a structured approach in the form of a template (as opposed to less structured approaches like brainstorming threats), that minimises the need for the author to be a 'security expert' or 'think like an attacker'.
 - It captures existing controls for already mitigated threats, and considers these to be as, if not more, important as unmitigated threats (which also avoids threat models with 'no threats')
 - It suits creating many small threat models as opposed to a few large threat models

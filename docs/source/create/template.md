@@ -3,8 +3,8 @@
 threatware is a tool to help people create threat models, but it needs to understand the format of a threat model in order to help.  To enable threatware to help threat models should be created from a threat model template which has a format that threatware can parse.  threatware parses threat models using a `scheme` file that describes the format of the threat model.  threatware provides an `scheme` for a threat model template that is tried and tested and been used in different organisations.  This section describes how to populate the provided threat model template (and this threat model template can be used without threatware, but threatware makes it simple to verify the template is populated correctly, and to manage the lifecycle of a threat model).
 
 threatware actually provides 2 versions of the same threat model template:
-- Confluence
 - [Google Doc](https://docs.google.com/document/d/1DBskRZBKpolIchljkVowFsvB-xRlSVf8sPguOnxsnhU/edit)
+- Confluence Page (unfortunately there is no free way to make a Confluence page available publicly.  You can download the Google Doc as a Word doc and then import the Word doc to a Confluence Page.  Some formatting will need to be applied though e.g. table widths, table header rows, etc.)
 
 :::{tip}
 The best way to learn how to populate the threat model template is to look at examples first, and read the documentation second.

@@ -69,14 +69,20 @@ It is not recommended that you connect with your Confluence username and passwor
 Google uses OAuth2.0 to authorise access to its APIs, and OAuth2.0 requires a Client ID in order to be used, and a Client ID requires registering an OAuth2.0 application with Google.  You have to register your own application because threatware cannot be published with this information because it contains a Client Secret.
 
 Follow these [instructions](https://developers.google.com/identity/protocols/oauth2/native-app) for how to register an application.
-- If you haven't used the gcloud console before you may need to first (create a Project)[https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project]
+- If you haven't used the gcloud console before you may need to first [create a Project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project)
 - The API you need to enable is `Google Drive API`
+- Before you can create credentials, you 'll need to create an app.
+    - Go the the "APIs and service" sections
+    - Go to "OAuth consent screen"
+    - Supply the mandatory information for the "OAuth consent screen" section
+    - Under the "Scopes" section click "ADD OR REMOVE SCOPES".  In the search box type "Google Drive API" and select the checkbox for `.../auth/drive.readonly`
+    - Complete the remaining sections filling in any mandatory fields
 - When you select `+Create Credentials` -> `OAuth client ID` choose the Application Type as `Desktop App`
-- Download the credentials JSON file for the application, and save it to `convertors/gdoc_convertor/credentials.json` (this can be customised in `providers/providers_config.yaml` via `providers:cli:google:credentials_file` key).
+- Download the credentials JSON file for the application, and save it to `credentials.json` (this can be customised in `providers/providers_config.yaml` via `providers:cli:google:credentials_file` key).
 
 When threatware attempts to access the Google Doc threat model for the first time a browser window will open and you will be asked to authorise access.  If successful, this stores a `token.json` file on the file system, and this is used for future requests (so authorisation using the browser window is a one-off experience).
 
-Note, for Google Docs, passing in the document ID is sufficient to know the location of the document as all documents share the same URL.
+Note, for Google Docs, passing in the document ID is sufficient to know the location of the document as all documents share the same base URL.
 
 ### Git Repository
 
@@ -154,10 +160,9 @@ It is not recommended that you connect with your Confluence username and passwor
 Google uses OAuth2.0 to authorise access to its APIs, and OAuth2.0 requires a Client ID in order to be used, and a Client ID requires registering a service account (when a user cannot explicitly authorise an application, as is the case with using a lambda).
 
 Follow these [instructions](https://developers.google.com/identity/protocols/oauth2/service-account) for how to register a service account.
-- If you haven't used the gcloud console before you may need to first (create a Project)[https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project]
-- The API you need to enable is `Google Drive API`
-- To generate credentials select `+Create Credentials` -> `Service Account` and populate the required information.
-    - Note, make a note of the Service Account email address.  *You will need to Share the Google Doc with this email address in order for the Service Account to have access.*
+- If you haven't used the gcloud console before you may need to first [create a Project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project)
+- Mkw sure to create a key type of `JSON`
+- Make a note of the Service Account email address.  **You will need to Share the Google Doc with this email address in order for the Service Account to have access.**
 - Download the JSON key file for the service account, and copy the contents to a Secret Key named `google`.  It will have the following format.
 
 :::json
