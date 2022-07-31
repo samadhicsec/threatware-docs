@@ -40,6 +40,7 @@ create/assets
 create/diagrams
 create/operations
 create/threats-controls
+create/examples
 ```
 
 ```{toctree}

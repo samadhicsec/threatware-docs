@@ -9,7 +9,7 @@ threatware actually provides 2 versions of the same threat model template:
 :::{tip}
 The best way to learn how to populate the threat model template is to look at examples first, and read the documentation second.
 
-For an example threat model, of threatware, see this [populated template]()
+For an example threat model, of threatware, see [](./examples.md)
 :::
 
 The following sections describe how to populate information in the above templates, regarding the context of the system being threat modelled.
