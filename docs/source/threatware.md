@@ -1,12 +1,12 @@
 # threatware
 Simplifies the review and management of threat models in documents
 
-threatware is an AWS lambda function (or CLI tool) with methods to help review threat models and provide a process to manage threat models.  It works directly with threat models as Confluence/Google Docs documents.
+threatware is an AWS lambda function (or CLI tool) with methods to help review threat models and provide a process to manage threat models.  It works directly with threat models as documents in Confluence/Google Docs.
 
 ## TL;DR
 2 things:
 - When capturing a threat model in a document, threatware can help answer the question ['Did we do a good job?'](https://github.com/adamshostack/4QuestionFrame), because it can verify the referential integrity of the information in the document (i.e. nothing undefined is referenced) and that there are threats covering all the assets.  This gives some assurance that your threat model is complete.  In contrast, many threat modelling tools take input and generate threats, but are unable to provide any assurance.
-- threatware provides a management framework to track, approve and iterate a threat model document.  There is no lock-in, all information is stored in a git repo.  The information it captures could be used for a variety of data-driven purposes e.g. inventory, coverage, metrics, etc.
+- threatware provides a management framework to track, approve and iterate a threat model document.  There is no lock-in, all information is stored in a git repo you own.  The information it captures could be used for a variety of data-driven purposes e.g. inventory, coverage, metrics, etc.
 
 # Installation
 
