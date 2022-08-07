@@ -21,7 +21,8 @@ If using threatware via the CLI then you don't need to set any of these environm
 :::
 
 - `THREATWARE_CONFIG_DIR` is the path to the directory where the git repo will be cloned.  By default this is `~/.threatware` for CLI usuage and `/tmp/.threatware` for lambda usuage.  If threatware detects this directory already exists it will assume that all the configuration is already present - it will not clone the git repo or overwrite the contents.
-  :::{warning} Warning
+  :::{admonition} Warning
+  :class: warning
   This directory **must not exist** already.  **Do not** create an empty directory for configuration.  As `git clone` is used, it will fail if the directory already exists.
   :::
 - `THREATWARE_CONFIG_REPO` is the git repo to clone configuration from.  If this is not set the default value is `https://github.com/samadhicsec/threatware-config`.

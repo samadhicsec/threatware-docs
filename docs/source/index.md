@@ -22,8 +22,10 @@ actions/measure
 :maxdepth: 2
 :hidden:
 
+configure/installation
 configure/configuration
 configure/authentication
+configure/management
 configure/logging
 
 ```

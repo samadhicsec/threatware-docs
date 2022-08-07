@@ -10,9 +10,27 @@ threatware is an AWS lambda function (or CLI tool) with methods to help review t
 
 # Installation
 
+## CLI
+
 threatware requires a recent version of `python` (3.9 or above, and you should have `pip` installed as well ([instructions](https://pip.pypa.io/en/stable/installation/))) and that a recent version of `git` is installed ([instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)).  You may also want to consider installing threatware in a [virtual environment](https://packaging.python.org/en/latest/tutorials/installing-packages/#creating-and-using-virtual-environments)
 
 `python3 -m pip install threatware`
+
+Run `threatware convert -s abc -d 123`, this will fail, but the configuration will be downloaded (from this [repo](https://github.com/samadhicsec/threatware-config)).
+
+Run `threatware -h` to see command line options.
+
+## AWS Lambda
+
+threatware on AWS Lambda requires uploading a docker image for the lambda function to execute, setting authentication credentials in AWS Secrets Manager, and configuring API Gatewat to invoke the lambda (as well as a bunch of IAM configuration).  Full instructions on the installation can be found in [](./configure/installation.md#aws-lambda).
+
+## Configuration
+
+See [](./configure/configuration.md) for details on how to setup the configuration location and files required by threatware
+
+See [](./configure/authentication.md) for details on how to configure authentication for threatware so it can access Confluence, Google Docs, and git.
+
+See [](./configure/management.md) for details on how to setup a storage location to store threat model management data.
 
 # Download
 
@@ -69,25 +87,3 @@ Of course that is up to you, but here is an idea of how it has been successfully
 See [](./create/overview.md#the-threat-modelling-process) for a more in-depth explanation of the process.
 
 As 3-4 threat models are completed, your local threat model template can be updated to include common components, assets and threats, which makes the next threat models easier to complete.  It's fine to add things that might not be relevant to some systems, as removing them from the copy of your threat model template is easy.
-
-### AWS lambda
-
-See [](./configure/authentication.md) for full details on how to configure authentication.
-
-Put Confluence/Google credentials, and git credentials into [AWS Secret Store](./configure/authentication.md#authentication-for-threatware-aws-lambda).  Change `manage/manage_config.yaml` to point to your chosen git repo.
-
-Setup [dynamic configuration](./configure/configuration.md#dynamic-configuration) to have your custom configuration in your own git repo.
-
-Clone the [repo](https://github.com/samadhicsec/threatware) and build the dockerfile. Upload docker image to ACS.  Create AWS lambda using docker image.  Adjust timeout on lambda to 30 seconds (you may need to increase memory if you get timeouts).  
-
-Trigger lambda via API Gateway (please restict access to your lambda to at least your organisation's IP range).
-
-### CLI
-
-See [](./configure/authentication.md) for full details on how to configure authentication.
-
-Run `threatware convert -s abc -d 123`, this will fail, but the configuration will be downloaded (from this [repo](https://github.com/samadhicsec/threatware-config)).
-
-Put Confluence credentials in `~/.threatware/.atlassian`.  Google Doc credentials will be automatically capture on first attempt to access a Google Doc (requires creating [Google App credentials](./configure/authentication.md#google-docs) first). threatware will use your existing git credentials SSH keys.  Change `manage/manage_config.yaml` to point to your chosen git repo.
-
-Run `threatware -h` to see command line options.
