@@ -43,3 +43,8 @@ epub_show_urls = 'footnote'
 
 myst_heading_anchors = 3
 myst_enable_extensions = ["deflist", "colon_fence"]
+
+html_static_path = ['css']
+
+def setup(app):
+   app.add_css_file("custom.css")
