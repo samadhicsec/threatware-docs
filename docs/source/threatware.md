@@ -3,10 +3,13 @@ Simplifies the review and management of threat models in documents
 
 threatware is an AWS lambda function (or CLI tool) with methods to help review threat models and provide a process to manage threat models.  It works directly with threat models as documents in Confluence/Google Docs.
 
-## TL;DR
-2 things:
-- When capturing a threat model in a document, threatware can help answer the question ['Did we do a good job?'](https://github.com/adamshostack/4QuestionFrame), because it can verify the referential integrity of the information in the document (i.e. nothing undefined is referenced) and that there are threats covering all the assets.  This gives some assurance that your threat model is complete.  In contrast, many threat modelling tools take input and generate threats, but are unable to provide any assurance.
-- threatware provides a management framework to track, approve and iterate a threat model document.  There is no lock-in, all information is stored in a git repo you own.  The information it captures could be used for a variety of data-driven purposes e.g. inventory, coverage, metrics, etc.
+## TL;DR for developers
+- threatware is a compiler for threat models.  For threat models as documents (in a format you can define), threatware reads and validates the document and can output the threat model in a machine-readable language.
+- threatware is a change management system for threat models.  threatware can be used as part of a GitOps process for approving threat models (whether new or as updates to existng threat models).
+
+## TL;DR for security teams
+- threatware helps your threat modelling to scale.  Engineering teams authoring their own threat models as documents (in a format you can define), can use threatware to detect errors in the threat model, as it is populated.  threatware documentation contains the process, guidance and examples to empower engineering teams to be threat model authors (with help from a security team).
+- threatware helps you govern your threat modelling.  threatware provides a management framework to track and approve new threat models and updates to existing threat models.
 
 # Installation
 
@@ -16,13 +19,13 @@ threatware requires a recent version of `python` (3.9 or above, and you should h
 
 `python3 -m pip install threatware`
 
-Run `threatware convert -s abc -d 123`, this will fail, but the configuration will be downloaded (from this [repo](https://github.com/samadhicsec/threatware-config)).
+Run `threatware convert -s abc -d 123`, this will fail, but the default configuration will be downloaded (from this [repo](https://github.com/samadhicsec/threatware-config)).
 
 Run `threatware -h` to see command line options.
 
 ## AWS Lambda
 
-threatware on AWS Lambda requires uploading a docker image for the lambda function to execute, setting authentication credentials in AWS Secrets Manager, and configuring API Gatewat to invoke the lambda (as well as a bunch of IAM configuration).  Full instructions on the installation can be found in [](./configure/installation.md#aws-lambda).
+threatware on AWS Lambda requires uploading a docker image for the lambda function to execute, setting authentication credentials in AWS Secrets Manager, and configuring API Gateway to invoke the lambda (as well as a bunch of IAM configuration).  Full instructions on the installation can be found in [](./configure/installation.md#aws-lambda).
 
 ## Configuration
 
@@ -53,9 +56,9 @@ threatware has different features to suit those who are beginning to threat mode
 ### Beginners
 
 - threatware provides a [Threat Modelling template](./create/template.md) that works out of the box.  The template is available as either a Confluence page or a Google Doc. (no tool lock-in)
-- threatware documentation includes detailed instructions on how to populate the template, aimed at developers, not threat modelling experts. (scalable)
-- threatware can verify the populated Threat Model template and report back on errors and missing threats. (automation) 
-- threatware can help define a management process for threat models by storing versioned: status, metadata and a model of your Threat Model document in a git repo of your choice. (auditors love this)
+- threatware [documentation](./create/overview.md) includes detailed instructions on how to populate the template, aimed at developers, not threat modelling experts. (scalable)
+- threatware can [verify](./actions/verify.md) the populated Threat Model template and report back on errors and missing threats. (automation) 
+- threatware can help define a [management](./configure/management.md) process for threat models by storing versioned: status, metadata and a model of your Threat Model document in a git repo of your choice. (auditors love this)
 
 ### Intermediates
 
@@ -77,7 +80,7 @@ Of course that is up to you, but here is an idea of how it has been successfully
 
 1. Make a copy of the threat model template available somewhere in your orgnisation i.e. copy the default template somewhere local to your organisation
 2. When you need to create a threat model, make a copy of your local threat model template.  This will be the document you edit.
-3. Identify the people who need to populate the template (i.e. system owners/experts) and point them at the documentation and how to invoke threatware `verify`
+3. Identify the people who need to populate the template (i.e. system owners/experts) and point them at the [documentation](./create/overview.md) and how to invoke threatware `verify`
 4. Have sessions to begin populating the threat model.  Use threatware `verify` to make sure no information is missing (look for `reference-validation` errors first).  You'll like need 3-5 sessions, including off-line time spent populating.
 5. Use threatware `verify` to make sure your have threats covering all your assets (look for `coverage-validation` errors)
 6. Once threatware `verify` returns no errors, sense check the threat model for completness
