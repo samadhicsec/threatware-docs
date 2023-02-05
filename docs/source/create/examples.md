@@ -6,7 +6,7 @@ Before sharing the finished threat model it will be useful to share a partially 
 
 This incomplete threat model is useful to demonstrate 2 things
 1) For someone reviewing the threat model they may very well see it as being mostly complete, if not actually complete.
-2) The benefit of using threatware's `verify` action can be seen, as it highlights the threats that are missing (the syntax of the threat model is otherwise fine, so there no errors of that type reported)
+2) The benefit of using threatware's `verify` action can be seen, as it highlights the threats that are missing (threatware does also report syntax errors, but the syntax of this example threat model is fine, so there are no errors of that type reported)
 
 Below we can see the output threatware `verify` on the incomplete threat model:
 
