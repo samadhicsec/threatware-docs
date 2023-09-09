@@ -106,3 +106,230 @@ So what about that IP allowlist?  If it's a set of specific IPs that are suppose
 
 Authorization
 :  How will the Component authorize the request e.g. check for a specific scope in the JWT, RBAC, delegate to IAM, look up permissions for a user/role, etc.  If the component does not do authorization, by convention the value `None` is used.  When no authorization is performed it means the Component will not place any restriction on whether it executes the request (notwithstanding it can still require an authenticated user).
+
+## Guidance on populating AuthN and AuthZ Table
+
+There is a huge range of possible authentication and authorisation approaches in use today.  That makes it hard to accurately and consistently capture how a Component authenticates and authorises requests coming into it.  Below is some guidance on how to capture authentication and authorisation information for a Component.
+
+To begin, you need to populate the AuthN and AuthZ Table with all the in-scope Components from the Components Details Table.  That would look something like:
+
+:::{table}
+:align: center
+| Component (In-scope) | Identity | Authentication | Authorization |
+| -------------------- | -------- | -------------- | ------------- |
+| ComponentA | | | |
+| ComponentB | | | |
+| ComponentC | | | |
+:::
+Now, taking each Component one at a time, we need to populate the Identity, Authentication and Authorisation columns for that Component's row.
+
+### Describe Identities
+
+First we need to think about the identities that a Component knows about.  You can add additonal rows for each identity the Component accepts requests from.  Below is a flow-chart to help with determining what identities to add for a Component.
+
+```{mermaid}
+:align: center
+flowchart TD
+    classDef default fill:#aed6f1
+    A[Start] --> Input{{"Does the component listen for external input i.e. requests"}}
+    Input -->|Yes| Proxy{{"Does the component just proxy the requests?\n(aware of only transport layer (e.g. TCP/UDP)\ne.g. firewall, load balancer, gateway)"}}
+    Input -->|No| InputN["A single row with #quot;n/a#quot; across all columns\nOptional: In Identity column: #quot;n/a (#lt;explanation>)#quot;"]
+    Proxy -->|Yes| ProxyY["Add a generic description for the requests\ne.g. #quot;Network Traffic#quot;"]
+    Proxy -->|No| Requests["Consider the range of request types\nthat come <b>INTO</b> the Component\n and who they are trying to serve.\n(Not including login)"]
+    Requests -->|For each request type| IDs{{"Is there an identity present in the request?\n(explicitly or available via session information lookup)\nE.g. username, session ID, JWT, HTTP header with certificate CN"}}
+    IDs -->|Yes| Many["Add a new Identity entry row for each\ngroup/explicit identity type/category/role/set,\npossible in the request type\n"]
+    IDs -->|No| Single["A single Identity entry describing the\nimplicit/implied/assumed identity associated to the requests\ne.g. Internal Services, Anonymous Users,\nAuthenticated Users, #lt;component name>"]
+    
+```
+
+Having done this for one Component row you could have a table like:
+
+:::{table}
+:align: center
+
+| Component (In-scope) | Identity     | Authentication | Authorization |
+| -------------------- | --------     | -------------- | ------------- |
+| ComponentA           | Users        | | |
+|                      | Admins       | | |
+|                      | ComponentC   | | |
+| ComponentB | | | |
+| ComponentC | | | |
+
+:::
+
+::::{admonition} FAQ
+Q: Why does the guidance say "Not including login" when considering different request types?
+:  See Authentication FAQ question "**Should I add a row for an 'Anonymous' caller, for requests made before they login?**"
+::::
+
+### Describing Authentication
+
+With a set of identities captured in different rows we now need to add authentication details to each row.  
+
+We are going to capture 2 different aspects to authentication:
+- **Login Authentication.**  This can happen when a Component receives an initial credential as part of a request, and can map that credential to a known user.  Not all Components handle login authentication themselves.  Some Components delegate this to other Components.  The login process can involve multiple steps, but we aren't looking to capture that complexity in this table.  Often a session token/identifier is the result of login authentication.
+- **Session Authentication.**  This can happen when a Component receives a session token or identifier that they can use to determine the identity associated with a request.  The session token/identifier is usually validated in some way before the associated identity is trusted.  It's possible there is no session authentication e.g.
+  - HTTP's 'Basic Auth' sends through a username and password on every request,
+  - An API token given to a client and used on every request,
+  - A client certificate used to establish a mutual-TLS connection
+
+Continuing on from the flow chart for describing identity (the output of the below flow chart should be captured in the Authentication column for the corresponding Identity).
+
+```{mermaid}
+:align: center
+flowchart TD
+    classDef default fill:#f9e79f 
+    classDef id fill:#aed6f1
+    Many[Add a new Identity entry row for each\ngroup/explicit identity type/category/role/set,\npossible in the requests]:::id --> Login{{Does the component itself do\n'login' authentication?}}
+    Single["A single Identity entry describing the\nimplicit/implied/assumed identity associated to the requests\ne.g. Internal Services, Anonymous Users,\nAuthenticated Users, #lt;component name>"]:::id --> IDN["#quot;None#quot;"]
+    Login -->|Yes| LoginItself[Describe login authentication.\nGive description including\nprotocol and checks made]
+    Login -->|No| LoginDelegate["#quot;Login authentication delegated to #lt;component name>#quot;"]
+    LoginItself --> Session{{Does the component itself do\n'session' authentication?}}
+    LoginDelegate --> Session
+    Session ---->|Yes| SessionD[Describe session authentication.\nGive description including\nprotocol and checks made]
+    Session -->|No, another component does| Delegate["#quot;Session authentication delegated to #lt;other component name>#quot;.\nOptional: Describe session authentication"]
+    Delegate -->|Description guidance| DescGuid{{Is the other component\nin-scope?}}
+    DescGuid -->|Yes| InScope["#quot;Session authentication delegated\nto #lt;other component name>#quot;."]
+    DescGuid -->|No| NotInScope["#quot;Session authentication delegated\nto #lt;other component name>#quot;.\nGive protocol used."]
+    Session ---->|No, there is no session token| Continue["Continue"]
+```
+
+In terms of what information about Authentication to capture, the goal here is to capture:
+  - Whether authentication happens
+  - Who does the authentication
+  - What protocols/procedures for authentication are implemented
+  - What validation is performed (if relevant)
+
+It's also a good idea to link to more information if possible.
+
+Having captured authentication for the various identities known to this Component, you could have a table like:
+
+:::{table}
+:align: center
+
+| Component (In-scope) | Identity     | Authentication | Authorization |
+| -------------------- | --------     | -------------- | ------------- |
+| ComponentA           | Users        | Login authentication via user name and password.<br />Session authentication via opaque session token. | |
+|                      | Admins       | Login authentication delegated to Corporate SSO.<br />Session authentication via JWTs.  JWT signature is validated. | |
+|                      | ComponentC   | None | |
+| ComponentB | | | |
+| ComponentC | | | |
+
+:::
+
+:::{hint}
+A common security issue is discovering that different Components in a system are applying different levels of validation when they authenticate a certain identity type.
+:::
+
+::::{admonition} FAQ
+Q: Should I add a row for an 'Anonymous' caller, for requests made before they login?
+:   You should only capture "Anonymous" callers to a Component if the Component is designed to take anonymous traffic (and we do not count the initial anonymous request for a user to login, that is just assumed).  So a website Component that is publicly browsable could have a row for an "Anonymous" Identity.  However, the same website that forces a user to immediately login wouldn't have an "Anonymous" row.  It is better to just capture Identities that the Component is expecting to deal with.  Otherwise every Component would have to have an "Anonymous" Identity row because every Component that can receive network traffic could in-theory recieve an anonymous request, but since it's always true it's just noise in the threat model document.
+
+Q: The authentication protocol my Component uses involves multiple stages and multiple flows, do I need to capture this process as multiple rows?
+:   No.  The purpose of the row is not capture detail on the authentication process (e.g. every OAuth2 redirect), but rather to capture the methods and protocols used for authentication, by the Component, for the different types of callers (i.e. identities) the Component receives, and any relevant validation done to confirm those identities.  Detailed information about authentication protocols can be captured (if beneficial) in the Diagrams section.
+
+Q: How do I decide whether an authentication method is 'login' or 'session'?
+:   A classic login authentication method is username and password.  However many systems enforce password expiry, meaning the password is only valid for a period of time.  So while a 'session' implies something valid for a period of time, 'time' is not the only factor to use to distinguish between login and session authentication, because passwords can be time limited, but are clearly not a session authentication method (the same applies to API keys and client certificates - in fact there should be few if any 'permanent' credentials).  In practice, a session token will usually also have a significantly shorter lifetime than login credentials (and so be wary of anyone trying to minimise security controls for so-called "session tokens" that live as long as login credentials).
+:   Another factor to identify a session authentication method is whether the authentication information in the request used was obtained by the *exchange* of other credentials (i.e. login credentials).  This is still not definitive though, as some authentication methods effectively exchange login credentials for other login credentials e.g. OAuth2 refresh token.  
+
+Q: What does "None" mean?
+:   *None* can mean different things:
+    - Requests to the Component are unauthenticated.  The Component does not know who the caller is, it does not associate any identity with the caller.
+    - Even when another Component in the request path before this Component does authenticate the caller, if that identity is NOT passed to this Component, then "None" is still the approriate answer.  Whilst the larger system may have authenticated the caller, this component does not know the identity of the caller, and moreover an appropriately positioned attacker in the system can make arbitrary calls to the Component.
+    - If the Component is sent an actual Identity but never consumes/processes that Identity (e.g. it's set in an HTTP header the Component doesn't read), then "None" is still the approriate answer. In this case not consuming/processing that Identity makes it equivlant to not knowing it in the first place.
+      - If the Identity is logged then that's relevant from a repudiation perspective, but not an authentication perspective.
+::::
+
+### Describing Authorisation
+One of the main reasons authentication is so important to security is that the resulting identity is often used to apply authorisation to the request coming from the caller.  Ultimately the point of trying to capture information about authorisation is to determine whether the component implements the concept that certain callers are allowed to perform certain actions, whilst other callers are prevented from performing certain actions.  In practice though a component itself isn't the only thing to consider when deciding what can invoke its functionality, that's why we consider the following (complimentary, not mutually exclusive) aspects of authorisation:
+- **Access to the component.**  Some components don't implement authorisation themselves, but rely entirely on another component restricting access to them.  This other component "enforces" authorisation on behalf of the component.  It's common for the component to enforce some authorisation itself, in addition to the access restriction.
+- **Access to the resources.**  This is traditional authorisation or access control.  A component implements actions on resources and needs to control who can do which action.  There are many different methods to achieve this.
+
+Continuing on from the flow chart for describing authentication (the output of the below flow chart should be captured in the Authorisation column for the corresponding Identity).
+
+```{mermaid}
+:align: center
+flowchart TD
+    classDef default fill:#abebc6
+    classDef auth fill:#f9e79f
+    A[From authentication]:::auth --> Access{{"Is (e.g. network) access to the component\nrestricted by another (intermediary) component?"}}
+    Access -->|Yes| AccessY["Provide description i.e. &quot;Access\ndelegated to #lt;other component name>&quot;.\nOptional: Describe conditions of access"]
+    Access -->|No| Authz{{"Does this component itself decide on \nany kind of restrictions for any type of caller?"}}
+    AccessY --> Authz
+    Authz -->|No| PDP{{"Does this component completely outsource access\ndecisions to another component\ni.e. a Policy Decision Point (PDP)"}}
+    PDP -->|Yes| PDPDelegate["&quot;Delegated to #lt;PDP component>&quot;"]
+    PDPDelegate --> PDPY{{Is the PDP in-scope?}}
+    PDPY --> |No| PDPinscopeN["Also describe (high level) what the identity can do,\nand what permissions(etc) are required.\nLink to config for brevity."]
+    PDP -->|No| None["&quot;None&quot;"]
+    Authz -->|Yes| Single{{Is there effectively a single account\nconfigured that can perform any action?}}
+    Single -->|Yes| None
+    Single -->|No| Perms{{"Are permissions/roles/policies/capabilities/scopes (etc)\nused to decide access?"}}
+    Perms -->|Yes| PermsY["Describe (high level) what the identity can do,\nand what permissions(etc) are required.\nLink to config for brevity."]
+    PermsY --> Own
+    Perms -->|No| Own{{"Can the identity only perform some actions on resources they own?\n(e.g. UPDATE resource WHERE id == $username)"}}
+    Own -->|Yes| OwnY["Add &quot;Actions restricted to owned resources&quot;"]
+    Own -->|No| OwnN["Describe how component decides what identities can do.\nLink to config for brevity."]
+    OwnY --> Finish["Finish"]
+    OwnN --> Finish
+    PDPY -->|Yes| Finish
+    PDPinscopeN --> Finish
+    None --> Finish
+```
+
+Having captured authentication for the various identities known to this Component, you could have a table like:
+
+:::{table}
+:align: center
+
+| Component (In-scope) | Identity     | Authentication | Authorization |
+| -------------------- | --------     | -------------- | ------------- |
+| ComponentA           | Users        | Login authentication via user name and password.<br />Session authentication via opaque session token. | Actions restricted to owned resources |
+|                      | Admins       | Login authentication delegated to Corporate SSO.<br />Session authentication via JWTs.  JWT signature is validated. | Access delegated to jumpbox<br />JWT scopes used to decide on allowed actions |
+|                      | ComponentC   | None | Access delegated to service mesh policy |
+| ComponentB | | | |
+| ComponentC | | | |
+:::
+
+:::{hint}
+A common security issue is discovering that an identity in a system has different levels of permission to act on the same type of resource because different Components have applied different access control policies/permissions (etc.) to the identity when it makes a request regarding the resource (as both Components have functionality for that resource.)
+:::
+
+::::{admonition} FAQ
+
+Q: The authorisation decisions my Component makes are complicated, do I need to capture them in detail?
+:   No.  The purpose of the row is to capture just enough detail on the authorisation controls to convey to the reader what controls are in place, and (ideally) provide them links to where they can get more detail if they want it.
+
+Q: What does "None" mean?
+:   *None* can mean different things:
+    - The component doesn't implement any authorisation itself, nor does it rely on another component to implement authorisation for it.
+    - Even when the Component has the capability to perform authorisation, if it has been configured with a single "admin" account (that has admin privileges), then we also capture "None" as this means component is not configured to restrict actions between different callers (because there is a single caller type), so isn't performing any authorisation.  The logic being that if a caller can authenticate to the component (using the single admin account configured) then they can do anything, so in essence the ability to authenticate is the authorisation control the component uses.
+::::
+
+### Examples
+
+The below are imaginary examples showing what might end up being in the AuthN/Z table.  Do not copy these without doing the work to confirm they are appropriate for your system.
+
+:::{table}
+:align: center
+
+| Component (In-scope) | Identity     | Authentication | Authorization |
+| -------------------- | --------     | -------------- | ------------- |
+| Web Application      | Users | Login authentication delegated to supported<br />Identity provider (e.g. Google) via OIDC<br />Session authentication via session cookies | Actions restricted to owned resources | 
+| Database             | Web Application | Username and password | None |
+| S3 Bucket            | User | Delegated to IAM via signed URL | S3 bucket resource policy |
+|                      | Operations | Delegated to company SSO | S3 Ops IAM Policy associated with Ops IAM Role |
+| API                  | Client | Login authentication via IdP<br />Session authentication via JWT | JWT scopes |
+|                      | Different Client | API Key | Permissions assigned to API key |
+| Internal Service     | Another Internal Service | None | Access delegated to K8 networking.<br />Only accessible to other K8 services. |
+| Web service          | 3rd party service | mTLS client certificate | 3rd Party Role assigned to identity |
+| AWS Service          | My Service running in AWS | AWS session token from EC2 metadata | Delegated to AWS IAM using policy. |
+| Kubernetes           | Microservice (as a Service Account) | Delegated to Kubernetes admission controller<br />via deployment resource definition | Delegated to Kubernetes admission controller<br />via deployment resource definition |
+| CSP Account          | Operations, Developers, Auditors | Delegated to company SSO | IAM Policy associated with IAM Role | 
+| Firewall             | Network traffic | None | Source IP based ACLs |
+| Cron job             | n/a (doesn't support incoming requests) | n/a | n/a |
+| Notepad.exe          | Developer | None | None |
+| sudo                 | Local User | Delegated to OS | sudoers file |
+| Remote Workstation   | Remote user | SSH Key | OS permissions assigned to local group user is member of |
+| Local Filesystem     | Web Service | Delegated to OS user authentication | Delegated to OS file system ACLs |
+
+:::
