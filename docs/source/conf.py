@@ -18,7 +18,9 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
     'myst_parser',
+    'sphinxcontrib.mermaid',
 ]
+exclude_patterns = ['_build']
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
@@ -30,7 +32,9 @@ intersphinx_disabled_domains = ['std']
 
 templates_path = ['_templates']
 
-source_suffix = ['.md']
+source_suffix = {
+   '.md': 'markdown'
+   }
 
 # -- Options for HTML output
 
