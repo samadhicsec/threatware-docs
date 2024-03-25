@@ -3,11 +3,11 @@
 # -- Project information
 
 project = 'threatware'
-copyright = '2023, samadhicsecurity.com'
+copyright = '2024, samadhicsecurity.com'
 author = 'dave@samadhicsecurity.com'
 
 release = '0.9'
-version = '0.9.2'
+version = '0.9.3'
 
 # -- General configuration
 
