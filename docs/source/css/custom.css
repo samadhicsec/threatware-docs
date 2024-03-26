@@ -1,3 +1,8 @@
 .wy-nav-content {
     max-width: 1400px;
  }
+
+/* Added this because list-table in customise/overview.md was not wrapping long text in table boxes. */
+.wy-table-responsive table td {
+    white-space: normal;
+}
