@@ -1,8 +1,10 @@
-# How to Define a scheme for a Threat Model Document
+# Scheme File Definition
 
-## Overview
+## How to Define a scheme for a Threat Model Document
 
-threatware tries to be format agnostic for the structure of the threat model documentation.  This means you can structure your threat model how you want.  In order to support this, threatware needs a file (called a 'scheme') that represents the format of your threat model document.  This is exactly how the [default template](../create/template.md) works, and you can see the [default 'scheme' for Confluence and Google Docs](https://github.com/samadhicsec/threatware-config/tree/main/schemes) to look at as examples.
+### Overview
+
+threatware tries to be format agnostic for the structure of the threat model document.  This means you can structure your threat model how you want.  In order to support this, threatware needs a file (called a 'scheme') that represents the format of your threat model document.  This is exactly how the [default template](../create/template.md) works, and you can see the [default 'scheme' for Confluence and Google Docs](https://github.com/samadhicsec/threatware-config/tree/main/schemes) to look at as examples.
 
 The 'scheme' is a parameter that is passed to threatware actions, and is the basis for the `convert` action to convert a threat model document to a `yaml` representation (which then becomes the common format that all other actions use for processing).
 
@@ -10,7 +12,7 @@ Unfortunately, there is no standardised language to describe the format of a gen
 
 The goal of this section is to give you a high level overview of the format of 'scheme' files and provide an example of how to extract a table from a Google Doc.  Whilst it isn't expected most people will want to create 'scheme' files from scratch, the idea is to explain the basics, which should allow modifications of existing 'scheme' files.
 
-## Scheme format (high-level)
+### Scheme format (high-level)
 
 The job of the scheme format is to map the contents of a document to a `yaml` representation of that document.  The `yaml` representation does not need to include all the information in the document, just the information you want to store, or you want to validate (and some information like diagrams cannot currently be captured).
 
@@ -59,6 +61,7 @@ Now let's add the next level of configuration keys for each of the above:
 
 ```{code-block} yaml
 :linenos:
+:emphasize-lines: 5, 7-10
 ---
 scheme:
   map:
@@ -96,7 +99,7 @@ Where:
 
 It'll be easiest to understand the next level of configuration by going through an example of extracting table data from a document.
 
-## Extracting a table
+### Extracting a table
 
 Since a lot of information in documents is often in a table, let's imagine we have a document like the following:
 
@@ -117,7 +120,7 @@ This is a threat model for a series of data flows.
 The overall risk is Low.
 ```
 
-What we want is to extract this information into a `yaml` document that will look like:
+What we want is to extract the information in the table into a `yaml` document that will look like:
 
 ```yaml
 threats:
@@ -211,10 +214,15 @@ Let's explain the new lines, line-by-line:
     ```
   - This is the name of the `yaml` key to use.  In this case it will be the root `threats:` key.
 * - ```{code-block} yaml
-    :emphasize-lines: 3-4
+    :emphasize-lines: 1-2
     :lineno-start: 9
           - value:
               get-data:
+    ```
+  - The `value` configuration defines what value to assign to the above `key:`.  To do this it oftens leverages `get-data:` configuration as a means to extract specific data.  At this stage the whole HTML representation of the Google Doc will be processed by this `get-data:` confgiuration.
+* - ```{code-block} yaml
+    :emphasize-lines: 1-2
+    :lineno-start: 9
                 - query:
                     type: "html-table"
     ```
@@ -314,7 +322,7 @@ Let's explain the new lines, line-by-line:
   - Is configuration saying get the contents of column 0 in this table row.
 :::
 
-The same logic applies to the configuration of each of the 4 list items defined under `map-data:`.  It's also important to note that threatware specifically does not require you to use the name of the column to get content - this was a design choice so that column names could be changed in documents without breaking the document content conversation (but also note that the name of the header above the table is used in the scheme document, so changing that would break document conversion).
+The same logic applies to the configuration of each of the 4 list items defined under `map-data:`.  It's also important to note that threatware specifically does not require you to use the name of the column to get content - this was a design choice so that column names could be changed in documents without breaking the document content conversion (but also note that the name of the header above the table is used in the scheme document, so changing that would break document conversion).
 
 Lastly there was:
 :::{list-table}
@@ -327,7 +335,7 @@ Lastly there was:
                 post-processor:
                 remove-header-row:
     ```
-  - This configuration strips the header row of the table from the output, as that is not content we want to capture.  Note, this isn't down by default as HTML tables don't always include header rows.
+  - This configuration strips the header row of the table from the output, as that is not content we want to capture.  Note, this isn't done by default as HTML tables don't always include header rows.
 :::
 
 At this stage we have a scheme file sufficiently defined to convert a Google Doc containing a single table into a `yaml` file containing the contents of the table.  However, we don't have enough information to *validate* the contents of the table are correct.  To do that we need to add metadata to the data that we want validate.  To do this in the scheme file format we add a `tags:` configuration.
@@ -426,7 +434,7 @@ Some tags to note:
     :lineno-start: 51
                       - validate-as-risk-rating
     ```
-  - These aren't defined, but their definition could be added to [validators_confdig.yaml](https://github.com/samadhicsec/threatware-config/blob/main/validators/validators_config.yaml), and would mean the validation logic, upon consuming the definition, would look for all key values in the output `yaml` with these tags, and apply the defined validation logic.
+  - These aren't defined, but their definition could be added to [validators_config.yaml](https://github.com/samadhicsec/threatware-config/blob/main/validators/validators_config.yaml), and would mean the validation logic, upon consuming the definition, would look for all key values in the output `yaml` with these tags, and apply the defined validation logic.
 :::
 
 ```{note}
@@ -435,13 +443,237 @@ In practice, writing the `xpath` selectors to get content from HTML can be quite
 See the example scheme files [confluence-scheme-1.0.yaml](https://github.com/samadhicsec/threatware-config/blob/main/schemes/confluence-scheme-1.0.yaml) and [googledoc-scheme-1.0.yaml](https://github.com/samadhicsec/threatware-config/blob/main/schemes/googledoc-scheme-1.0.yaml) for appropriate pre-processing values for the corresponding document formats.
 ```
 
+## Configuring a new scheme file
 
-# Reference
+After you create a new scheme file you need to make it available to use.  To do that you can follow these steps:
 
-# Query types
+1. Save you file in the `schemes/` directory where your configuration files are stored.
+1. Update `schemes/schemes.yaml` to include a new key that is the name of your scheme, with a value that is the file location (see the existing extries for examples).
+1. Now you can use your new scheme name where ever the [scheme parameter](../actions/parameters.md#scheme) is used.
 
-The `get-data:` / `query:` / `type:` supports the following values:
+## Testing a new scheme file
 
-- `html-table` - this returns the content of an html table a list of rows.  It will iterate over each row, passing it to the associated `map-data:` configured.
-- `html-table-row` - this returns 
-- `html-ul`
+To test the new scheme file created:
+
+- Use the [CLI](../configure/installation.md#cli) version of threatware, for speed of debugging
+- Enable [`DEBUG` level logs](../configure/logging.md)
+- Use the threatware [convert](../actions/convert.md) action
+- Set the `convert` parameter `-meta none` as this will avoid outputting tags, which makes the output easier to read.  Obviously when you add tags to the scheme and want to check the tags are correctly being assigned, then you can remove the the `meta` parameter (as tags are shown by default i.e. `-meta tags`)
+
+## Reference
+
+### Query types
+
+The `get-data:` / `query:` supports the following `type:` values:
+
+:::{list-table}
+:widths: auto 
+:header-rows: 1
+
+* - Category
+  - Type
+  - Use Case
+  - Example
+  - Description
+* - HTML
+  - `html-table`
+  - Extract an HTML table from HTML
+  - ```{code-block} yaml
+    :emphasize-lines: 3-6
+    get-data:
+      - query:
+          type: "html-table"
+          xpath: "//html/body/h1[text()='Details']/following::table[1]"
+          remove-header-row:
+          remove-rows-if-empty:
+    ```
+  - This returns the content of an HTML table as a list of rows.  It will iterate over each row, passing it to the associated `map-data:` configuration.  It supports the following configuration
+    - `xpath:` - the XPath expression to the table.
+    - `remove-header-row:` - if present (no value required) will remove the first row when iterating over the rows to pass to the associated `map-data:` configured.  Generally always better to use the [](./overview.md#post-processing-options) `remove-header-row` instead of this, as that allows threatware to retain metadata about column header names.
+    - `remove-rows-if-empty:` - if present (no value required) will remove any empty rows when iterating over the rows to pass to the associated `map-data:` configuration.
+* - HTML
+  - `html-table-row`
+  - Get the value from a column given a row
+  - ```{code-block} yaml
+    :emphasize-lines: 3-4
+    get-data:
+      query:
+        type: html-table-row
+        column-num: 1
+    ```
+  - This configuration expects to be passed a row from an `html-table` query configuration.  It returns the value from the column number (0 indexed) specified in `column-num`.
+* - HTML
+  - `html-table-transpose`
+  - Get an HTML table as a series of columns
+  - ```{code-block} yaml
+    :emphasize-lines: 6
+    get-data:
+      - query:
+          type: "html-table"
+          xpath: "//html/body/h1[text()='Details']/following::table[1]"
+      - query:
+          type: "html-table-transpose"
+    ```
+  - This is usually chained with an `html-table` query, and instead of returning the rows, it returns the transpose of the table meaning the columns are passed to the associated `map-data:` configuration.  This is useful for tables where the headers are in the first column (as opposed to the first row).
+* - Text
+  - `text-split`
+  - Returns individual data in a section of text
+  - ```{code-block} yaml
+    :emphasize-lines: 6-10
+    get-data:
+      - query:
+          type: html-table-row
+          column-num: 2
+      - query:
+          type: text-split
+          split-by:
+            char-separators: 
+              - ","
+              - "\n"
+    ```
+  - Given a value from a previous query as input, the `text-split` type will split the value and iterate over each result, passing it to the associated `map-data:` configuration.  Possible types of splitting include:
+    - `char-separators:` a list of characters, any of which present will split the value into multiple smaller values
+    - `line-regex:` a (python) regular expression with group capture (or if not specified the last group is selected).  The input value is split into lines, and the regex run on each line.
+* - Text
+  - `text-match`
+  - Returns lines that match
+  - ```{code-block} yaml
+    :emphasize-lines: 6-7
+    get-data:
+      - query:
+          type: html-table-row
+          column-num: 2
+      - query:
+          type: text-match
+          line-regex: "(?i)confidentiality|integrity|availability"
+    ```
+  - Given a value from a previous query as input, the `text-match` type will split the value into lines, and run the regex over each line, outputting the entire line if the regex matches.
+* - Text
+  - `text-replace`
+  - Returns a replacement value on match
+  - ```{code-block} yaml
+    :emphasize-lines: 6-8
+    get-data:
+      - query:
+          type: html-table-row
+          column-num: 2
+      - query:
+          type: text-replace
+          match: "SSL"
+          replacement: "TLS"
+    ```
+  - Given a value from a previous query as input, the `text-replace` type will check if the value is an exact match for the `match:` value and if so it will return the `replacement:` value.  If there is no match, the original string is returned.
+* - Value
+  - `value-extract`
+  - Returns a capture group from a regex
+  - ```{code-block} yaml
+    :emphasize-lines: 3-5
+    get-data:
+      - query:
+          type: value-extract
+          regex: "^(\\w+):(.*)"
+          group: 1
+    ```
+  - Given a value from a previous query as input, the `value-extract` type will return the specified capture `group` from the `regex:`.  Note, group 0 matches the whole string if it matches at all, so group 1 is the first group of the regex, etc.
+* - Value
+  - `value-match`
+  - Returns lines that match
+  - ```{code-block} yaml
+    :emphasize-lines: 6-7
+    get-data:
+      - query:
+          type: html-table-row
+          column-num: 2
+      - query:
+          type: value-match
+          line-regex: "(?i)confidentiality|integrity|availability"
+    ```
+  - Given a value from a previous query as input, the `value-match` type will split the value into lines, and run the regex over each line, outputting the entire line if the regex matches.
+* - Value
+  - `value-replace`
+  - Returns a replacement value on match
+  - ```{code-block} yaml
+    :emphasize-lines: 6-8
+    get-data:
+      - query:
+          type: html-table-row
+          column-num: 2
+      - query:
+          type: value-replace
+          match: "SSL"
+          replacement: "TLS"
+    ```
+  - Given a value from a previous query as input, the `value-replace` type will check if the value is an exact match for the `match:` value and if so it will return the `replacement:` value.  If there is no match, the original string is returned.
+* - Value
+  - `value-urldecode`
+  - Returns a URL decoded version of the value
+  - ```{code-block} yaml
+    :emphasize-lines: 6
+    get-data:
+      - query:
+          type: html-table-row
+          column-num: 2
+      - query:
+          type: value-urldecode
+    ```
+  - Given a value from a previous query as input, the `value-urldecode` will return the URL decoded value.
+  :::
+
+### Post processing options
+
+The `output-data:` / `post-processor:` supports the following values:
+
+:::{list-table}
+:widths: auto 
+:header-rows: 1
+
+* - Post Processor
+  - Use Case
+  - Example
+  - Description
+* - `remove-empty-rows`
+  - Removes empty rows from a table
+  - ```{code-block} yaml
+    :emphasize-lines: 3-5
+    output-data:
+      post-processor:
+        remove-empty-rows:
+          ignore-keys: 
+            - category
+    ```
+  - Given the output of `map-data:` (a list), remove any list rows where all the entries are empty.  Optionally specify a list of `ignore-keys:`, which are the column values in the row to ignore when checking if empty e.g. if `ignore-keys:` lists the `category` column (really `key:` name from `map-data:`) then even if it has a value, but the rest of the row is empty, that row will be removed.
+* - `remove-header-row`
+  - Removes the 1st row from a table
+  - ```{code-block} yaml
+    :emphasize-lines: 3
+    output-data:
+      post-processor:
+        remove-header-row:
+    ```
+  - Given the output of `map-data:` (a list), remove the first row.  
+* - `inherit-row-above-if-empty`
+  - Allows a row to inherit the value of the row above in a given column
+  - ```{code-block} yaml
+    :emphasize-lines: 3-4
+    output-data:
+      post-processor:
+        inherit-row-above-if-empty:
+          key: category
+    ```
+  - Given the output of `map-data:` (a list), loop though all rows and if the value of column (really `key:` name from `map-data:`) specified by `key:` is empty, then populate it with the value from the row above.  This allows for the lazy population of tables as it avoids having to repeat the same column value many times in different rows.
+* - `value-replace`
+  - Returns a replacement value on match
+  - ```{code-block} yaml
+    :emphasize-lines: 3-9
+    output-data:
+      post-processor:
+        value-replace:
+          - match: "C"
+            replacement: "Confidentiality"
+          - match: "I"
+            replacement: "Integrity"
+          - match: "A"
+            replacement: "Availability"
+    ```
+  - Given some input (a string), looks for any of the list of `match` values and if found outputs the corresponding `replacement` value.  If there is no match, the original string is returned.
+:::

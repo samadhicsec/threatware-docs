@@ -8,7 +8,7 @@ Many of the actions that threatware supports takes common parameters, which are 
 
 `scheme` is the name of the scheme to be used to parse the threat modelling document.  A scheme is like a schema e.g. XML schema.
 
-The possible `scheme` values are located in the `schemes/schemes.yaml` file.  The value to use is they name (yaml key), not the file name (yaml value).
+The possible `scheme` values are located in the `schemes/schemes.yaml` file.  The value to use is the name (yaml key), not the file name (yaml value).
 
 The `scheme` values provided by default are:
 
