@@ -1,5 +1,9 @@
 # Example
 
+:::{seealso}
+**NEW!** threatware now has a tutorial introduction, check it out at [](../tryit.md)
+:::
+
 It would be ironic for a threat modelling tool to not have its own threat model, and so that is the primary example shared here.
 
 Before sharing the finished threat model it will be useful to share a partially completed threat model, which before continuing you should review - [Threatware Threat Model - Incomplete](https://docs.google.com/document/d/1NQepy_K4tKcIT9xpssRDcW4T58uk_slGbwafN307rWQ/edit?usp=sharing)

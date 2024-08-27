@@ -2,7 +2,7 @@
 
 The easiest way to quickly try out threatware is the following:
 
-1. Make a copy of the tutorial threat model.
+1. Make a copy of the [tutorial threat model](https://docs.google.com/document/d/1Dnf-vzzEu1q0fZozBC-fi-hjefds9wWkRt6VXrrN2yo/view).
 1. Locally run the container docker.io/threatwaretryit/api_threatware
 1. Follow the tutorial comments to learn about the `convert` and `verify` threatware actions
 1. Create a local git repo to learn about the `manage.create` and `manage.submit` threatware actions
@@ -11,9 +11,9 @@ Let's get into the detail of each step.
 
 ## 1. Copy tutorial threat model
 
-Make you own copy of the tutorial threat model (and tick the "Copy comments and suggestions" box).
+Make you own copy of the [tutorial threat model](https://docs.google.com/document/d/1Dnf-vzzEu1q0fZozBC-fi-hjefds9wWkRt6VXrrN2yo/view) (menu option `File->Make a copy`, and tick the `Copy comments and suggestions` box).
 
-In the newly copied threat model click the "Share" button and under "General Access" select "Anyone with the link" and give them "Viewer" access.  This is required so the container running threatware locally will be able to access it.
+In the newly copied threat model click the `Share` button and under `General Access` select `Anyone with the link` and give them `Viewer` access (the default).  This is required so the container running threatware locally will be able to access it.
 
 There are several links in large text at the top of the tutorial threat model, that are in lines that reference the TUTORIAL.  You need to update the URL in these links to reference the copy of the tutorial threat model you just made.  First copy the Google document ID from your copy of the tutorial threat model from your browser URL bar.
 
@@ -23,7 +23,7 @@ Now edit each threatware action link (there are 5 i.e. convert, verify, manage.c
 
 ## 2. Run the container
 
-This step requires you have access to a Linux/Mac or Windows WSL environment.
+This step requires you have access to a Linux/Mac/Windows WSL environment.
 
 First create the directory we need to store the threat models.  We need the directory to exist before we run the container.
 
@@ -44,16 +44,18 @@ or
 podman run -d --rm --replace --name=threatware.local --publish 9000:8080 --mount type=bind,src=/tmp/threatmodels,dst=/home/threatuser/threatmodels --userns=keep-id docker.io/threatwaretryit/api_threatware:latest
 ```
 
-To test this is working correctly go to `http://localhost:9000/version` in a browser, and you should get back a version number e.g. `0.9.4`.
+To test this is working correctly open <http://localhost:9000/version> in a browser, and you should get back a version number e.g. `0.9.4`.
 
 ## 3. Follow the tutorial in the tutorial threat model
 
 :::{tip}
 If using Chrome you may want to install a JSON viewer extension e.g. [JSON Viewer](https://chromewebstore.google.com/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh).
+
+Firefox will already neatly format JSON responses to be easier to read.
 :::
 
-1. Go through the comments in the tutorial threat model labelled **TUTORIAL 1**.  This will demonstrate the `convert` action of threatware.
-1. Go through the comments in the tutorial threat model labelled **TUTORIAL 2**.  This will demonstrate the `verify` action of threatware.
+1. Go through the comments in your copy of the tutorial threat model labelled **TUTORIAL 1**.  This will demonstrate the `convert` action of threatware.
+1. Go through the comments in your copy of the tutorial threat model labelled **TUTORIAL 2**.  This will demonstrate the `verify` action of threatware.
 
 ## 4. Create local git repo and complete the tutorials
 
@@ -72,9 +74,9 @@ Creating a threat model and being able convert it to a machine readable format, 
 
 When managing threat models it is incredible useful to have a constant identifer for a threat model.  Often the threat model name is used for this purpose, but generally speaking that might not remain constant and is harder to work with than a more compact ID.  threatware can be used to help create this identifier and keep a record of all the created identifiers in a git repo, alongside the name and status of the threat model.
 
-In the tutorial threat model, click on the `manage.create` link at the top in the TUTORIAL 3 line.  This should return a message saying the ID `SAI.TMD.1` has been created.  You can now update the `Threat Model ID` row in the "Details" table with this new ID value (confusingly there are 2 tables called "Details" in the threat model, one at the top and one under Components, for the purpose of these tutorials we are referring to the one at the top of the threat model).
+In your copy of the tutorial threat model, click on the `manage.create` link at the top in the TUTORIAL 3 line.  This should return a message saying the ID `SAI.TMD.1` has been created.  You can now update the `Threat Model ID` row in the "Details" table with this new ID value (confusingly there are 2 tables called "Details" in the threat model, one at the top and one under Components, for the purpose of these tutorials we are referring to the one at the top of the threat model).
 
-threatware also let's you retrieve information about a threat model using its ID.  In the tutorial threat model, click on the link `manage.indexdata` at the top in the TUTORIAL 3 line.
+threatware also let's you retrieve information about a threat model using its ID.  In your copy of the tutorial threat model, click on the link `manage.indexdata` at the top in the TUTORIAL 3 line.
 
 But this fails!  That is because making state changing `manage.*` requests to threatware does nothing but create a branch in the git repo, yet `manage.*` commands that read data only read from the `approved` branch.  So although we created a new ID, it's not 'official' until the `create` branch (where the created ID was written) is merged onto the `approved` branch.  Let's do that now:
 
@@ -98,14 +100,14 @@ cat threatmodels.yaml
 
 Storing basic information about the threat models that have been created is good, but what we really want is to manage approvals of threat models and also capture the contents of the threat model in the git repo.
 
-In the tutorial threat model, click on the `manage.submit` link at the top in the TUTORIAL 4 line (this will fail if you didn't complete TUTORIAL 3 and update the ID in the "Details" table of the threat model).  The response should indicate that the threat model was submitted.  We can confirm this by looking for a branch in our git repo that matches the ID of the threat model:
+In your copy of the tutorial threat model, click on the `manage.submit` link at the top in the TUTORIAL 4 line (this will fail if you didn't complete TUTORIAL 3 and update the ID in the "Details" table of the threat model).  The response should indicate that the threat model was submitted.  We can confirm this by looking for a branch in our git repo that matches the ID of the threat model:
 
 ```shell
 cd /tmp/threatmodels
 git branch
 ```
 
-Submitting threat models for approval via threatware is useful, but we want threat models to be self-contained i.e. you should know the approval status of a threat model by just looking at the threat model itself.  To store the approval status of the threat model in the threat model itself we need to update 2 tables:
+Submitting threat models for approval via threatware is useful, but we also want threat models to be self-contained i.e. you should know the approval status of a threat model by just looking at the threat model itself.  To store the approval status of the threat model in the threat model itself we need to update 2 tables:
 
 - In the "Details" table the `Approved Version` row holds the last version of threat model that was approved (or it is empty if no version has been approved yet).
     - The `Current Version` row holds the version of the threat model being worked on.  This usually starts at `1.0` and increments from there.  It can be different to the `Approved Version` value, but should have a corresponding row in the "Version History" table.
@@ -114,7 +116,7 @@ Submitting threat models for approval via threatware is useful, but we want thre
     - `Approver Name` must be populated
     - `Approver Date` must be populated
 
-Go ahead and set the status of the tutorial threat model to approved.  The action of approving the threat model it is expected to be done by someone with the appropriate authority, often someone from the Security team.  Do this by:
+Go ahead and set the status of your copy of the tutorial threat model to approved.  The action of approving the threat model it is expected to be done by someone with the appropriate authority, often someone from the Security team.  Do this by:
 - In the "Details" table set the `Approved Version`  to `1.0`
 - In the "Version History" table for the row with `Version` value `1.0`
     - Setting the `Status` to `APPROVED` (I like to also change the table cell color to green)
