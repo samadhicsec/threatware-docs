@@ -68,7 +68,7 @@ cd /tmp/threatmodels
 # Initialise the git repo
 git init --initial-branch approved && git commit --allow-empty --allow-empty-message
 ```
-Creating a threat model and being able convert it to a machine readable format, and being able to verify it is correct, is great for the process of actually creating a threat model.  But creating a threat model is only part of a program of work to leverage threat modelling across your company.  To help enable this program of work threatware has two more actions to help with the management of threat models; `manage.create` and `manage.submit`.  The following tutorials are about how to use a gitops approach (i.e. using a git repo as your source of truth) to managing threat models.
+Creating a threat model and being able to convert it to a machine readable format and to verify it is correct, is great for the process of actually creating a threat model, but creating a threat model is only part of the process required to operationalise threat modelling across your company.  threatware has two more actions that help with the management of threat models; `manage.create` and `manage.submit`.  The following tutorials are about how to use a gitops approach (i.e. using a git repo as your source of truth) to managing threat models.
 
 ### TUTORIAL 3
 
