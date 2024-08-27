@@ -34,11 +34,15 @@ mkdir /tmp/threatmodels
 
 If you haven't already, [install docker](https://docs.docker.com/engine/install/) (or [podman](https://podman.io/docs/installation)), and run:
 
-`docker run -d --rm --replace --name=threatware.local --publish 9000:8080 --mount type=bind,src=/tmp/threatmodels,dst=/home/threatuser/threatmodels docker.io/threatwaretryit/api_threatware:latest`
-
+```shell
+# Depending on how docker is installed, you may need to run the below command with sudo
+docker run -d --rm --name=threatware.local --publish 9000:8080 --mount type=bind,src=/tmp/threatmodels,dst=/home/threatuser/threatmodels docker.io/threatwaretryit/api_threatware:latest
+```
 or 
 
-`podman run -d --rm --replace --name=threatware.local --publish 9000:8080 --mount type=bind,src=/tmp/threatmodels,dst=/home/threatuser/threatmodels --userns=keep-id docker.io/threatwaretryit/api_threatware:latest`
+```shell
+podman run -d --rm --replace --name=threatware.local --publish 9000:8080 --mount type=bind,src=/tmp/threatmodels,dst=/home/threatuser/threatmodels --userns=keep-id docker.io/threatwaretryit/api_threatware:latest
+```
 
 To test this is working correctly go to `http://localhost:9000/version` in a browser, and you should get back a version number e.g. `0.9.4`.
 
@@ -94,14 +98,15 @@ cat threatmodels.yaml
 
 Storing basic information about the threat models that have been created is good, but what we really want is to manage approvals of threat models and also capture the contents of the threat model in the git repo.
 
-In the tutorial threat model, click on the `manage.submit` link at the top in the TUTORIAL 4 line (this will fail if you didn't complete TUTORIAL 3 and update the ID in the "Details" table of the threat model).  The response should indicate that the threat model was submitted.  We can check this by looking for a branch in our git repo that matches the ID of the threat model:
+In the tutorial threat model, click on the `manage.submit` link at the top in the TUTORIAL 4 line (this will fail if you didn't complete TUTORIAL 3 and update the ID in the "Details" table of the threat model).  The response should indicate that the threat model was submitted.  We can confirm this by looking for a branch in our git repo that matches the ID of the threat model:
 
 ```shell
 cd /tmp/threatmodels
 git branch
 ```
 
-The problem is we also want to keep track of the threat model status (i.e. whether is has been approved by Security) within the threat model itself, and we do this in 2 places:
+Submitting threat models for approval via threatware is useful, but we want threat models to be self-contained i.e. you should know the approval status of a threat model by just looking at the threat model itself.  To store the approval status of the threat model in the threat model itself we need to update 2 tables:
+
 - In the "Details" table the `Approved Version` row holds the last version of threat model that was approved (or it is empty if no version has been approved yet).
     - The `Current Version` row holds the version of the threat model being worked on.  This usually starts at `1.0` and increments from there.  It can be different to the `Approved Version` value, but should have a corresponding row in the "Version History" table.
 - In the "Version History" table there must be row with `Version` matching the `Approved Version` (from the "Details" table) and:
@@ -109,21 +114,21 @@ The problem is we also want to keep track of the threat model status (i.e. wheth
     - `Approver Name` must be populated
     - `Approver Date` must be populated
 
-Go ahead and set the status of the tutorial threat model to approved.  Do this by:
+Go ahead and set the status of the tutorial threat model to approved.  The action of approving the threat model it is expected to be done by someone with the appropriate authority, often someone from the Security team.  Do this by:
 - In the "Details" table set the `Approved Version`  to `1.0`
 - In the "Version History" table for the row with `Version` value `1.0`
     - Setting the `Status` to `APPROVED` (I like to also change the table cell color to green)
     - Set an `Approver Name` (you can type `@` in the table cell to get Google to display a list of users)
     - Set an `Approver Date` (you can type `@date` in the table cell to bring up a calendar)
 
- Now let's try clicking on the `manage.submit` link at the top in the TUTORIAL 4 line again.  You'll get a similiar message as last time, but since this act is really supposed to be done by the Security team (it's usually their name in the `Approver Name` field) the message is really a reminder that the threat model isn't really approved until the branch is merged.  Let's do that:
+ Now let's try clicking on the `manage.submit` link at the top in the TUTORIAL 4 line again.  You'll get a similiar message as last time, but it is really a reminder that the threat model isn't 'officially' approved until the branch threatware created in the git repo is merged onto the `approved` branch.  Let's do that:
 
  ```shell
 cd /tmp/threatmodels
 git merge SAI.TMD.1
 ```
 
-You can confirm that the current status of the threat model is approved by clicking onthe `manage.indexdata` link from TUTORIAL 3.
+You can confirm that the current status of the threat model is approved by clicking on the `manage.indexdata` link from TUTORIAL 3.
 
 In the git repo you can see the new record of the approved threat model as a directory that matches the ID has been created, and inside that are the following files:
 - `metadata.yaml` - this contains metadata about each approved version of the threat model
@@ -132,8 +137,16 @@ In the git repo you can see the new record of the approved threat model as a dir
 
 That's it, you've finished the tutorials.  To clean up you can run:
 - `docker container stop threatware.local` (or `podman container stop threatware.local`) to stop the threatware container
-- `rm -rf /tmp/threatmodels` to remove the local git repo
+-  ```shell
+   cd /tmp
+   # to remove the local git repo
+   rm -rf threatmodels 
+   ```
 
 :::{note}
 CONGRATULATIONS!  You have just tried out threatware!  I hope you found it interesting and will consider using it to help you on your threat modelling journey.
+
+To learn more about the threat modelling process you can read the [](./create/overview.md).
+
+To install threatware as an AWS Lambda function so everyone in your company can access it, you can read [](./configure/installation.md)
 :::
