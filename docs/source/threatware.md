@@ -1,16 +1,22 @@
 # threatware
-Simplifies the review and management of threat models in documents
+Simplifies the review and management of threat models.
 
-threatware is an AWS lambda function (or CLI tool) with methods to help review threat models and provide a process to manage threat models.  It works directly with threat models as documents in Confluence/Google Docs.
+threatware works directly with threat models as documents in Confluence/Google Docs.
+
+threatware can be deployed as an AWS lambda function, an API, or used as a CLI tool.
+
+:::{tip}
+One of the best ways to understand what threatware does is just to [](./tryit.md)
+:::
 
 The [](./create/examples.md) page contains links to example threat models and an example of the output of threatware.
 
 ## TL;DR for developers
-- threatware is a compiler for threat models.  For threat models as documents (in a format you can define), threatware reads and validates the document and can output the threat model in a machine-readable language.
+- threatware is a compiler for threat models.  For threat models as documents (in a format you can define), threatware reads and validates the document and can output the threat model in a machine-readable format.
 - threatware is a change management system for threat models.  threatware can be used as part of a GitOps process for approving threat models (whether new or as updates to existng threat models).
 
-## TL;DR for security teams
-- threatware helps your threat modelling to scale.  Engineering teams authoring their own threat models as documents (in a format you can define), can use threatware to detect errors in the threat model, as it is populated.  threatware documentation contains the process, guidance and examples to empower engineering teams to be threat model authors (with help from a security team).
+## TL;DR for Security teams
+- threatware helps your threat modelling to scale.  Engineering teams authoring their own threat models as documents (in a format you can define), can use threatware to detect errors in the threat model, as it is populated.  threatware documentation contains the process, guidance and examples to empower engineering teams to be threat model authors (with help from a Security team).
 - threatware helps you govern your threat modelling.  threatware provides a management framework to track and approve new threat models and updates to existing threat models.
 
 # Installation
@@ -27,7 +33,7 @@ Run `threatware -h` to see command line options.
 
 ## AWS Lambda
 
-threatware on AWS Lambda requires uploading a docker image for the lambda function to execute, setting authentication credentials in AWS Secrets Manager, and configuring API Gateway to invoke the lambda (as well as a bunch of IAM configuration).  Full instructions on the installation can be found in [](./configure/installation.md#aws-lambda).
+threatware on AWS Lambda requires uploading a container image for the lambda function to execute, setting authentication credentials in AWS Secrets Manager, and configuring API Gateway to invoke the lambda (as well as a bunch of IAM configuration).  Full instructions on the installation can be found in [](./configure/installation.md#aws-lambda).
 
 ## Configuration
 
@@ -60,7 +66,7 @@ threatware has different features to suit those who are beginning to threat mode
 - threatware provides a [Threat Modelling template](./create/template.md) that works out of the box.  The template is available as either a Confluence page or a Google Doc. (no tool lock-in)
 - threatware [documentation](./create/overview.md) includes detailed instructions on how to populate the template, aimed at developers, not threat modelling experts. (scalable)
 - threatware can [verify](./actions/verify.md) the populated Threat Model template and report back on errors and missing threats. (automation) 
-- threatware can help define a [management](./configure/management.md) process for threat models by storing versioned: status, metadata and a model of your Threat Model document in a git repo of your choice. (auditors love this)
+- threatware can help define a [management](./configure/management.md) process for threat models by storing versioned; status, metadata and (most of) the contents of your Threat Model document in a git repo of your choice. (auditors love this)
 
 ### Intermediates
 

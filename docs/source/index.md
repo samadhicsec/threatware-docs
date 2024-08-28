@@ -3,6 +3,7 @@
 :hidden:
 
 self
+tryit.md
 ```
 
 ```{toctree}
@@ -53,5 +54,5 @@ create/examples
 customise/overview
 ```
 
-```{include} threatware.md
+```{include} threatware.md 
 ```
