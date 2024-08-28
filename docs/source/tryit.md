@@ -9,7 +9,7 @@ The easiest way to quickly try out threatware is the following:
 
 Let's get into the detail of each step.
 
-## 1. Copy tutorial threat model
+## 1. Copy tutorial threat model (3 min)
 
 Make you own copy of the [tutorial threat model](https://docs.google.com/document/d/1Dnf-vzzEu1q0fZozBC-fi-hjefds9wWkRt6VXrrN2yo/view) (menu option `File->Make a copy`, and tick the `Copy comments and suggestions` box).
 
@@ -21,7 +21,7 @@ Example: for `https://docs.google.com/document/d/1Dnf-vzzEu1q0fZozBC-fi-hjefds9w
 
 Now edit each threatware action link (there are 5 i.e. convert, verify, manage.create, manage.indexdata and manage.submit) referenced in the TUTORIAL lines at the top of your copy of the tutorial threat model and replace the `docloc` URL parameter (it should be the last one) in each link URL with the document ID you copied for your copy of the tutorial threat model (it will be different to the example above!).  This makes it so threatware will read your copy of the tutorial threat model, rather than the public one.
 
-## 2. Run the container
+## 2. Run the container (5 min)
 
 This step requires you have access to a Linux/Mac/Windows WSL environment.
 
@@ -46,7 +46,7 @@ podman run -d --rm --replace --name=threatware.local --publish 9000:8080 --mount
 
 To test this is working correctly open <http://localhost:9000/version> in a browser, and you should get back a version number e.g. `0.9.4`.
 
-## 3. Follow the tutorial in the tutorial threat model
+## 3. Follow the tutorial in the tutorial threat model (15 mins)
 
 :::{tip}
 If using Chrome you may want to install a JSON viewer extension e.g. [JSON Viewer](https://chromewebstore.google.com/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh).
@@ -54,10 +54,10 @@ If using Chrome you may want to install a JSON viewer extension e.g. [JSON Viewe
 Firefox will already neatly format JSON responses to be easier to read.
 :::
 
-1. Go through the comments in your copy of the tutorial threat model labelled **TUTORIAL 1**.  This will demonstrate the `convert` action of threatware.
-1. Go through the comments in your copy of the tutorial threat model labelled **TUTORIAL 2**.  This will demonstrate the `verify` action of threatware.
+1. Go through the comments in your copy of the tutorial threat model labelled **TUTORIAL 1**.  This will demonstrate the `convert` action of threatware. (5 mins)
+1. Go through the comments in your copy of the tutorial threat model labelled **TUTORIAL 2**.  This will demonstrate the `verify` action of threatware. (10 mins)
 
-## 4. Create local git repo and complete the tutorials
+## 4. Create local git repo and complete the tutorials (10 mins)
 
 To see how threatware can persist a copy of threat models and track their versions and approval status, a git repo is needed.  In practice an online git repo (e.g. Github, Gitlab etc) would be used, but for the purpose of trying threatware, you can create a temporary local repo.
 
@@ -66,11 +66,11 @@ Assuming you have `git` [installed](https://git-scm.com/book/en/v2/Getting-Start
 ```shell
 cd /tmp/threatmodels
 # Initialise the git repo
-git init --initial-branch approved && git commit --allow-empty --allow-empty-message
+git init --initial-branch approved && git commit --allow-empty --allow-empty-message -m ""
 ```
 Creating a threat model and being able to convert it to a machine readable format and to verify it is correct, is great for the process of actually creating a threat model, but creating a threat model is only part of the process required to operationalise threat modelling across your company.  threatware has two more actions that help with the management of threat models; `manage.create` and `manage.submit`.  The following tutorials are about how to use a gitops approach (i.e. using a git repo as your source of truth) to managing threat models.
 
-### TUTORIAL 3
+### TUTORIAL 3 (5 mins)
 
 When managing threat models it is incredible useful to have a constant identifer for a threat model.  Often the threat model name is used for this purpose, but generally speaking that might not remain constant and is harder to work with than a more compact ID.  threatware can be used to help create this identifier and keep a record of all the created identifiers in a git repo, alongside the name and status of the threat model.
 
@@ -96,7 +96,7 @@ cd /tmp/threatmodels
 cat threatmodels.yaml
 ```
 
-### TUTORIAL 4
+### TUTORIAL 4 (5 mins)
 
 Storing basic information about the threat models that have been created is good, but what we really want is to manage approvals of threat models and also capture the contents of the threat model in the git repo.
 
