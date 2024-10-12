@@ -333,7 +333,7 @@ Lastly there was:
     :lineno-start: 43
               output-data:
                 post-processor:
-                remove-header-row:
+                  remove-header-row:
     ```
   - This configuration strips the header row of the table from the output, as that is not content we want to capture.  Note, this isn't done by default as HTML tables don't always include header rows.
 :::

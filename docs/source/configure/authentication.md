@@ -29,13 +29,13 @@ The format of the file depends on the type of Confluence server you need to auth
 
 The format is:
 
-:::ini
+```ini
 [DEFAULT]
 url = <your Confluence URL>
 username = <your Confluence username>
 api_token = <your Confluence API Token>
 cloud = True
-:::
+```
 
 This is also the default, meaning that if the `cloud` field is not present, it is assumed to be `True`
 
@@ -43,24 +43,24 @@ This is also the default, meaning that if the `cloud` field is not present, it i
 
 The format is:
 
-:::ini
+```ini
 [DEFAULT]
 url = <your Confluence URL>
 token = <your Confluence Personal Access Token>
 cloud = False
-:::
+```
 
 #### Server Confluence with Username and Password
 
 The format is:
 
-:::ini
+```ini
 [DEFAULT]
 url = <your Confluence URL>
 username = <your Confluence username>
 password = <your Confluence password>
 cloud = False
-:::
+```
 
 It is not recommended that you connect with your Confluence username and password, it is better security practice to use a PAT.
 
@@ -90,12 +90,12 @@ Authentication to the git repository uses the SSH keys of the current user, usua
 
 The location of the git repository is specified in `manage/manage_config.yaml` via
 
-:::yaml
+```yaml
 manage-config:
     storage:
         gitrepo:
             remote: <git location e.g. git@github.com:username/project>
-:::
+```
 
 The `remote` value to specify is passed directly to the `git` command and so it's many variations are supported e.g. specifying a specific key via `~/.ssh/config`.
 
@@ -117,14 +117,14 @@ The format of the JSON value depends on the type of Confluence server you need t
 
 The format is:
 
-:::json
+```json
 { 
     "url": "<your Confluence URL>", 
     "username": "<your Confluence username>",
     "api_token": "<your Confluence API Token>",
     "cloud": "True"
 }
-:::
+```
 
 This is also the default, meaning that if the `cloud` field is not present, it is assumed to be `True`
 
@@ -132,26 +132,26 @@ This is also the default, meaning that if the `cloud` field is not present, it i
 
 The format is:
 
-:::json
+```json
 { 
     "url": "<your Confluence URL>", 
     "token": "<your Confluence Personal Access Token>",
     "cloud": "False"
 }
-:::
+```
 
 #### Server Confluence with Username and Password
 
 The format is:
 
-:::json
+```json
 { 
     "url": "<your Confluence URL>", 
     "username": "<your Confluence username>",
     "password": "your Confluence password",
     "cloud": "False"
 }
-:::
+```
 
 It is not recommended that you connect with your Confluence username and password, it is better security practice to use a PAT.
 
@@ -161,11 +161,11 @@ Google uses OAuth2.0 to authorise access to its APIs, and OAuth2.0 requires a Cl
 
 Follow these [instructions](https://developers.google.com/identity/protocols/oauth2/service-account) for how to register a service account.
 - If you haven't used the gcloud console before you may need to first [create a Project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project)
-- Mkw sure to create a key type of `JSON`
+- Make sure to create a key type of `JSON`
 - Make a note of the Service Account email address.  **You will need to Share the Google Doc with this email address in order for the Service Account to have access.**
 - Download the JSON key file for the service account, and copy the contents to a Secret Key named `google`.  It will have the following format.
 
-:::json
+```json
 {
     "type": "service_account", 
     "project_id": "<project-id>", 
@@ -178,7 +178,7 @@ Follow these [instructions](https://developers.google.com/identity/protocols/oau
     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs", 
     "client_x509_cert_url": "<client_x509_cert_url>" 
 }
-:::
+```
 
 ### Git Repository
 
@@ -186,20 +186,20 @@ Authentication to the git repository uses SSH keys, which will need to be genera
 
 After generating the SSH key you should have a public key (e.g. `~/.ssh/id_ed25519.pub`) and a private key (e.g. `~/.ssh/id_ed25519`), and the contents of these files need to be copied into a Secret Key named `git`, into respective entries.  It will have the following format:
 
-:::json
+```json
 {
     "public-key":"ssh-ed25519 ABC...DEF <service account email address>", 
     "private-key":"-----BEGIN OPENSSH PRIVATE KEY-----\nABC...DEF\nGHI..JKL\n...\n-----END OPENSSH PRIVATE KEY-----\n"
 }
-:::
+```
 
 The location of the git repository is specified in `manage/manage_config.yaml` via
 
-:::yaml
+```yaml
 manage-config:
     storage:
         gitrepo:
             remote: <git location e.g. git@github.com:username/project>
-:::
+```
 
 The `remote` value to specify is passed directly to the `git` command and so it's many variations are supported e.g. specifying a specific key via `~/.ssh/config`.

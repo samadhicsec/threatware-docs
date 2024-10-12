@@ -8,7 +8,7 @@ tryit.md
 
 ```{toctree}
 :caption: threatware Actions
-:maxdepth: 2
+:maxdepth: 1
 :hidden:
 
 actions/parameters

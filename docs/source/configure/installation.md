@@ -34,8 +34,16 @@ You will also need to configure the `aws` CLI command with an approriate profile
 
     ```shell
     cd samadhicsec/threatware
-    docker build -t threatware-image .
+    docker build --pull -t threatware-image .
     ```
+
+    :::{admonition} Tip
+    :class: tip
+    You may want to tag the threatware-image with the actual version you are going to use, this make it easier to specify an image retention policy in ECR e.g.
+    ```shell
+    docker build --pull -t threatware-image:0.9.9 .
+    ```
+    :::
 
 3) Set some environment variables - this will make the commands below easier.  Replace the values with values relevant to your environment
 
@@ -59,6 +67,14 @@ You will also need to configure the `aws` CLI command with an approriate profile
     ```
 
 6) Upload the docker container image
+
+    :::{admonition} Tip
+    :class: tip
+    If in Step 2 you tagged the threatware-image with a version make sure to use it here e.g.
+    ```shell
+    docker tag threatware-image:0.9.9 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/threatware-image:0.9.9
+    ```
+    :::
 
     ```shell
     docker tag threatware-image:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/threatware-image:latest
@@ -172,6 +188,14 @@ You will also need to configure the `aws` CLI command with an approriate profile
 10) Create a lambda function
 
     Be sure to insert the ARN of the threatware-role and the location of the git repo with your configuration e.g. git@github.com:...
+
+    :::{admonition} Tip
+    :class: tip
+    If in Step 6 you tagged the threatware-image with a version make sure to use it here
+    ```shell
+    --code ImageUri=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/threatware-image:0.9.9
+    ```
+    :::
 
     ```shell
     aws lambda create-function \

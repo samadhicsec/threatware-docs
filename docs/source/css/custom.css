@@ -1,5 +1,7 @@
 .wy-nav-content {
-    max-width: 1400px;
+    /*max-width: 1400px;*/
+    max-width: 75vw;
+    margin: auto;
  }
 
 /* Added this because list-table in customise/overview.md was not wrapping long text in table boxes. */
