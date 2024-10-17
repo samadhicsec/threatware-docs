@@ -63,8 +63,11 @@ If using Chrome you may want to install a JSON viewer extension e.g. [JSON Viewe
 Firefox will already neatly format JSON responses to be easier to read.
 :::
 
+Tasks:
 1. Go through the comments in your copy of the tutorial threat model labelled **TUTORIAL 1**.  This will demonstrate the `convert` action of threatware. (5 mins)
 1. Go through the comments in your copy of the tutorial threat model labelled **TUTORIAL 2**.  This will demonstrate the `verify` action of threatware. (10 mins)
+
+In summary, threatware is able to convert a threat model in a document to a machine readable format, and also apply a set of (configurable) validations to ensure correctness and consistency of threat models.
 
 Creating a threat model and being able to convert it to a machine readable format and to verify it is correct, is great for the process of actually creating a threat model, but creating a threat model is only part of the process required to operationalise threat modelling across your company.  threatware has two more actions that help with the management of threat models; `manage.create` and `manage.submit`.  The following tutorials are about how to use a gitops approach (i.e. using a git repo as your source of truth) to managing threat models.
 
@@ -72,68 +75,80 @@ Creating a threat model and being able to convert it to a machine readable forma
 
 When managing threat models it is incredible useful to have a constant identifer for a threat model.  Often the threat model name is used for this purpose, but generally speaking that might not remain constant and is harder to work with than a more compact ID.  threatware can be used to help create this identifier and keep a record of all the created identifiers in a git repo, alongside the name and status of the threat model.
 
-In your copy of the tutorial threat model, click on the `manage.create` link at the top in the TUTORIAL 3 line.  This should return a message saying the ID `SAI.TMD.1` has been created.  You can now update the `Threat Model ID` row in the "Details" table with this new ID value (confusingly there are 2 tables called "Details" in the threat model, one at the top and one under Components, for the purpose of these tutorials we are referring to the one at the top of the threat model).
+Tasks:
+1. In your copy of the tutorial threat model, click on the `manage.create` link at the top in the TUTORIAL 3 line.  This should return a message saying the ID `SAI.TMD.1` has been created.  
+1. You can now update the `Threat Model ID` row in the "Details" table with this new ID value (confusingly there are 2 tables called "Details" in the threat model, one at the top and one under Components, for the purpose of these tutorials we are referring to the one at the top of the threat model).
+1. threatware also let's you retrieve information about a threat model using its ID.  In your copy of the tutorial threat model, click on the link `manage.indexdata` at the top in the TUTORIAL 3 line.
 
-threatware also let's you retrieve information about a threat model using its ID.  In your copy of the tutorial threat model, click on the link `manage.indexdata` at the top in the TUTORIAL 3 line.
+    But this fails!  That is because making state changing `manage.*` requests to threatware (like when we clicked `manage.create`) does nothing but create a branch in the git repo, yet `manage.*` requests that read data only read from the `approved` branch.  So although we created a new ID (when we clicked `manage.create`), it's not 'official' until the `create` branch (where the created ID was written) is merged onto the `approved` branch.  Let's do that now:
 
-But this fails!  That is because making state changing `manage.*` requests to threatware (like when we clicked `manage.create`) does nothing but create a branch in the git repo, yet `manage.*` requests that read data only read from the `approved` branch.  So although we created a new ID (when we clicked `manage.create`), it's not 'official' until the `create` branch (where the created ID was written) is merged onto the `approved` branch.  Let's do that now:
+    ```shell
+    cd /tmp/threatmodels
+    git merge create
+    ```
 
-```shell
-cd /tmp/threatmodels
-git merge create
-```
+1. Now let's try that `manage.indexdata` link again?  This time it should return details about the threat model with ID `SAI.TMD.1`.
 
-Now let's try that `manage.indexdata` link again?  This time it should return details about the threat model with ID `SAI.TMD.1`.
+    This means that the central Security team can manage threat models through controlling the merging of branches to a git repo they control.  Moreover since git is being used there is a full history of all the changes that were made (and by who).
 
-This means that the central Security team can manage threat models through controlling the merging of branches to a git repo they control.  Moreover since git is being used there is a full history of all the changes that were made.
+1. If you want to see the actual file in the git repo that contains this data, you can do:
 
-If you want to see the actual file in the git repo that contains this data, you can do:
+    ```shell
+    cd /tmp/threatmodels
+    cat threatmodels.yaml
+    ```
 
-```shell
-cd /tmp/threatmodels
-cat threatmodels.yaml
-```
+In summary, to allow for the management of threat models across your business, threatware is able to assing a unique document identifier to each threat model and keep a registry of all threat models (in a git repo).
 
 ## TUTORIAL 4 (5 mins)
 
 Storing basic information about the threat models that have been created is good, but what we really want is to manage approvals of threat models and also capture the contents of the threat model in the git repo.
 
-In your copy of the tutorial threat model, click on the `manage.submit` link at the top in the TUTORIAL 4 line (this will fail if you didn't complete TUTORIAL 3 and update the ID in the "Details" table of the threat model).  The response should indicate that the threat model was submitted.  We can confirm this by looking for a branch in our git repo that matches the ID of the threat model (i.e. you should see a branch listed called `SAI.TMD.1`):
+Tasks:
+1. In your copy of the tutorial threat model, click on the `manage.submit` link at the top in the TUTORIAL 4 line (this will fail if you didn't complete TUTORIAL 3 and update the ID in the "Details" table of the threat model).  The response should indicate that the threat model was submitted.  
+1. We can confirm this by looking for a new branch in our git repo that matches the ID of the threat model (i.e. you should see a branch listed called `SAI.TMD.1`):
 
-```shell
-cd /tmp/threatmodels
-git branch
-```
+    ```shell
+    cd /tmp/threatmodels
+    git branch
+    ```
 
-Submitting threat models for approval via threatware is useful, but we also want threat models to be self-contained i.e. you should know the approval status of a threat model by just looking at the threat model itself.  To store the approval status of the threat model in the threat model itself we need to update 2 tables:
+Submitting threat models for approval via threatware is useful, but we also want threat models to be self-contained i.e. you should know the approval status of a threat model by just looking at the threat model itself.  
 
-- In the "Details" table the `Approved Version` row holds the last version of threat model that was approved (or it is empty if no version has been approved yet).
-    - The `Current Version` row holds the version of the threat model being worked on.  This usually starts at `1.0` and increments from there.  It can be different to the `Approved Version` value, but should have a corresponding row in the "Version History" table.
-- In the "Version History" table there must be row with `Version` matching the `Approved Version` (from the "Details" table) and:
-    - `Status` must be `APPROVED`
-    - `Approver Name` must be populated
-    - `Approver Date` must be populated
+The approval status of the threat model is stored in the threat model itself using 2 tables:
 
-The action of approving the threat model it is expected to be done by someone with the appropriate authority, often someone from the Security team.  Go ahead and set the status of your copy of the tutorial threat model to approved by completing the below steps:
-- In the "Details" table set the `Approved Version`  to `1.0`
-- In the "Version History" table for the row with `Version` value `1.0`
-    - Set the `Status` to `APPROVED` (I like to also change the table cell color to green)
-    - Set an `Approver Name` (you can type `@` in the table cell to get Google to display a list of users)
-    - Set an `Approver Date` (you can type `@date` in the table cell to bring up a calendar)
+- "Details" table 
+    - the `Approved Version` row holds the last version of threat model that was approved (or it is empty if no version has been approved yet).
+    - the `Current Version` row holds the version of the threat model being worked on.  This usually starts at `1.0` and increments from there.  It can be different to the `Approved Version` value, but should have a corresponding row in the "Version History" table.
+- "Version History" table - contains a history of versions, with 1 row per version
+    - `Version` holds the version identifier (there must be a row where the value in this column matches the versions listed in the "Details" table)
+    - `Status` must be one of; `DRAFT`, `APPROVED`, or `OBSOLETE` (these values are configurable)
+    - `Approver Name` must be populated if `Status` is `APPROVED`
+    - `Approver Date` must be populated if `Status` is `APPROVED`
 
- Now let's try clicking on the `manage.submit` link at the top in the TUTORIAL 4 line again.  You'll get a similiar message as last time, but it is really a reminder that the threat model isn't 'officially' approved until the branch threatware created in the git repo is merged onto the `approved` branch.  Let's do that:
+3. The action of approving the threat model it is expected to be done by someone with the appropriate authority, often someone from the Security team.  Go ahead and set the status of your copy of the tutorial threat model to approved by completing the below steps:
+    - In the "Details" table set the `Approved Version`  to `1.0`
+    - In the "Version History" table for the row with `Version` value `1.0`
+        - Set the `Status` to `APPROVED` (I like to also change the table cell color to green)
+        - Set an `Approver Name` (you can type `@` in the table cell to get Google to display a list of users)
+        - Set an `Approver Date` (you can type `@date` in the table cell to bring up a calendar)
 
- ```shell
-cd /tmp/threatmodels
-git merge SAI.TMD.1
-```
+1. Now let's try clicking on the `manage.submit` link at the top in the TUTORIAL 4 line again.  You'll get a similiar message as last time, but it is really a reminder that the threat model isn't 'officially' approved until the branch threatware created in the git repo is merged onto the `approved` branch.  
+1. Let's approve the threat model by merging onto the `approved` branch:
 
-You can confirm that the current status of the threat model is approved by clicking on the `manage.indexdata` link from TUTORIAL 3.
+    ```shell
+    cd /tmp/threatmodels
+    git merge SAI.TMD.1
+    ```
 
-In the git repo you can see the new record of the approved threat model as a directory that matches the ID has been created, and inside that are the following files:
+1. You can confirm that the current status of the threat model is approved by clicking on the `manage.indexdata` link from TUTORIAL 3 (the `status` field should say `APPROVED`).
+
+In the git repo a new directory has appeared, named using the ID of the threat model you just approved.  Inside that directory are the following files:
 - `metadata.yaml` - this contains metadata about each approved version of the threat model
 - `1.0.plain.yml` - this contains the output of the `convert` command (the file name matches the version, so all old versions are kept and never overwritten)
 - `1.0.yml` - this contains the same threat model data as `1.0.plain.yml` but includes internal metadata of threatware making it possible for threatware to read the threat model without having to reprocess the threat model.
+
+In summary, you have used threatware (and git) to track the version, status and approvals for a threat model, and also captured the threat model in a git repo, in a machine readable format (yaml).
 
 ## Cleanup
 That's it, you've finished the tutorials.  To clean up you can run:
