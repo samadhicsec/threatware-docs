@@ -7,7 +7,7 @@ copyright = '2024, samadhicsecurity.com'
 author = 'dave@samadhicsecurity.com'
 
 release = '0.9'
-version = '0.9.3'
+version = '0.9.5'
 
 # -- General configuration
 
@@ -48,7 +48,7 @@ epub_show_urls = 'footnote'
 myst_heading_anchors = 3
 myst_enable_extensions = ["deflist", "colon_fence"]
 
-html_static_path = ['css']
+html_static_path = ['css', '_static']
 
 def setup(app):
    app.add_css_file("custom.css")

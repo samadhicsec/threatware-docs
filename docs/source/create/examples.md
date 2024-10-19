@@ -12,7 +12,23 @@ This incomplete threat model is useful to demonstrate 2 things
 1) For someone reviewing the threat model they may very well see it as being mostly complete, if not actually complete.
 2) The benefit of using threatware's `verify` action can be seen, as it highlights the threats that are missing (threatware does also report syntax errors, but the syntax of this example threat model is fine, so there are no errors of that type reported)
 
-Below we can see the output threatware `verify` on the incomplete threat model:
+Below we can see the output threatware `verify`, in 2 different formats, on the incomplete threat model:
+
+## HTML format
+
+Using the HTML output format for the `verify` action is a very user-friendly method to highlight issues in a threat model.  
+
+Scroll down the embedded HTML page below to find the issues and then hover over them with your mouse to read the issue descriptions.
+
+```{eval-rst}
+.. raw:: html
+
+  <iframe src="../_static/output.html" height="800" width="100%"></iframe>
+```
+
+## JSON format
+
+If you need machine readable output then the JSON format is the way to go.  Occasionally the HTML format is unable to display all the issues found (when this happens there is text indicating this), but the JSON format will always show all issues.
 
 ```json
 {
@@ -225,11 +241,13 @@ Below we can see the output threatware `verify` on the incomplete threat model:
 }
 ```
 
+## Coverage
+
 threatware `verify` has identified 15 assets that were not covered by a threat in the Threats and Controls table.
 
 :::{admonition} Common Misconception
 :class: warning
-It's tempting to conclude that threatware `verify` has identicated there are 15 missing threats, but this incorrect.
+It's tempting to conclude that threatware `verify` has identified there are 15 missing threats, but this incorrect.
 
 As can be seen from the `fix-data` in the `verify` response, we would expect a threat to cover multiple assets.  Take for example the first 2 ERRORS in the findings which mention assets `Threat model YAML` and `Threat model index data` which both are stored in component `Client Temp Storage` - we would absolutely expect the same threats and controls to apply to both assets as they are in the same location (obviously that is not always true, but it is often true).  This means we only want to add 1 new row to the Threats and Controls table to cover both of these assets, and threatware allows this by either listing both assets, or using the language in the `fix-data` section.
 

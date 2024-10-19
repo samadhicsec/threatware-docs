@@ -10,17 +10,29 @@ How exactly `measure` determines the distance between a threat model and its tem
 - new authentication and authorisation methods (as a pair)
 - new threats and controls
 
+## Parameters
+
 `measure` takes the following parameters:
 
 - `scheme` - the scheme name to use.  This defines how to convert the threat model document and template to the model format.
 - `docloc` - the document ID of the threat model document (in the document location specified by `scheme`)
 - `doctemplate` - the document ID of the threat model template document (in the document location specified by `scheme`)
 
-Examples:
+## Examples
+
+### Lambda
 
 Using `measure` with threatware as a lambda, to measure the distance between a threat model document and a threat model template in Confluence:
 
     https://<lambda-url>/threatware?action=measure&scheme=confluence_1.0&docloc=123456&doctemplate=67890
+
+### API
+
+Using `measure` with threatware as an API, to measure the distance between a threat model document and a threat model template in Confluence:
+
+    https://<api-hostname>/measure?scheme=confluence_1.0&docloc=123456&doctemplate=67890
+
+### CLI
 
 Using `measure` threatware as a CLI, to measure the distance between a threat model document and a threat model template in Google Docs:
 

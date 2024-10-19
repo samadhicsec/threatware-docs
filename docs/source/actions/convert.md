@@ -8,6 +8,8 @@ Common uses of the `convert` action include:
 - To capture the model of the threat modelling document for manually putting in storage
 - To feed the model of the threat modelling document to some other process
 
+## Parameters 
+
 `convert` takes the following parameters
 
 - `scheme` - the scheme name to use.  This defines how to convert the threat model document to the model format.
@@ -17,11 +19,21 @@ Common uses of the `convert` action include:
     - `tags`       - (default value) the output model will contain the tags that are associated to each key (tags are defined in the scheme file).  This is useful for debugging issues with the scheme definition.
     - `properties` - the output model will contain the tags and properties associated to each key (properties are metadata captured during the coverting of the document).  This is useful for advanced debugging of issues with the scheme definition.  The `properties` value should only be used when the output format parameter is `yaml`, as json is not (natively) capable of complex objects as keys.  This format is a complete internal representation of what threatware uses, and the only format that threatware can consume when a model is stored (relevant for some `manage` actions).
 
-Examples:
+## Examples
+
+### Lambda
 
 Using `convert` with threatware as a lambda to debug a scheme definition, being used on a threat model document in Confluence.  This relies on the default value of `meta` = `tags`:
 
     https://<lambda-url>/threatware?action=convert&scheme=confluence_1.0&docloc=123456
+
+### API
+
+Using `convert` with threatware as an API to debug a scheme definition, being used on a threat model document in Confluence.  This relies on the default value of `meta` = `tags`:
+
+    https://<api-hostname>/convert?scheme=confluence_1.0&docloc=123456
+
+### CLI
 
 Using `convert` threatware as a CLI to generate a human readable version of a threat model document in Google Docs
 

@@ -15,6 +15,13 @@ The `scheme` values provided by default are:
 - `confluence_1.0`
 - `googledoc_1.0`
 
+At the top of each `scheme` files is a `document-storage` setting that tells threatware what document storage location to connect to.
+
+For example:
+1. When the `scheme` parameter is set to `googledoc_1.0` threatware will look at the `schemes/schemes.yaml` configuration to find the corresponding scheme file to use e.g. `googledoc-scheme-1.0.yaml`
+1. threatware will open `googledoc-scheme-1.0.yaml` and read the `document-storage` yaml key, which in this case has the value `googledoc`
+1. threatware internally knows that a storage location of `googledoc` means it will use the configuration for `google` in `providers/providers_config.yaml` (for the appropriate environment e.g. lambda, cli) in order to authenticate to the Google APIs and retrieve the threat model document (given the ID of the document, see `docloc` below)
+
 ### docloc and doctemplate
 
 The `docloc` and `doctemplate` parameters are the document IDs of the document relative to its storage location (note, a document ID is different to a threat model ID).  The storage location is determined from the `scheme` parameter.
@@ -47,7 +54,7 @@ The following are parameters that can be specified and are independent of action
 
 ### format
 
-threatware supports output in either `json` (the default) or `yaml`.
+threatware supports output in either `json` (the default), `yaml` or `html` (just for the `verify` action).
 
 Example:
 
